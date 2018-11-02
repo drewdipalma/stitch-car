@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 // Base Stitch Packages
+import com.google.android.things.pio.I2cDevice;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 
@@ -59,7 +60,7 @@ public class HomeActivity extends Activity {
     private static final String BUTTON_PIN_NAME = "BCM20";
     private static final String LED_PIN_NAME = "PWM1";
 
-    // Parameters of the servo PWM
+    // Parameters of the servo PCA9685
     private static final double MIN_ACTIVE_PULSE_DURATION_MS = 1;
     private static final double MAX_ACTIVE_PULSE_DURATION_MS = 2;
     private static final double PULSE_PERIOD_MS = 20;  // Frequency of 50Hz (1000/20)
@@ -73,35 +74,93 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        final StitchAppClient client = Stitch.initializeDefaultAppClient("stitch-rover-omwgh");
-        final MongoClient mongoClient = client.getServiceClient(LocalMongoDbService.clientFactory);
-        final MongoCollection<Document> coll = mongoClient.getDatabase("Rover").getCollection("Test");
+//        final StitchAppClient client = Stitch.initializeDefaultAppClient("stitch-rover-omwgh");
+//        final MongoClient mongoClient = client.getServiceClient(LocalMongoDbService.clientFactory);
+//        final MongoCollection<Document> coll = mongoClient.getDatabase("Rover").getCollection("Test");
+//
+//        System.out.println("There are " + coll.countDocuments() + " documents");
+//        coll.insertOne(new Document("hello", "world"));
+//
+//        System.out.println("There are " + coll.countDocuments() + " documents");
+//        System.out.println(coll.find().first());
+//
+//        PeripheralManager manager = PeripheralManager.getInstance();
+//        Log.d(TAG, "Available GPIO: " + manager.getGpioList());
+//
+//        Log.d(TAG, "Available GPIO: " + manager.getI2cBusList());
+//
+//        List<String> portList = manager.getPwmList();
+//        if (portList.isEmpty()) {
+//            Log.i(TAG, "No PCA9685 port available on this device.");
+//        } else {
+//            Log.i(TAG, "List of available ports: " + portList);
+//        }
+//
+//        try {
+//            Servo.install();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        System.out.println("There are " + coll.countDocuments() + " documents");
-        coll.insertOne(new Document("hello", "world"));
-
-        System.out.println("There are " + coll.countDocuments() + " documents");
-        System.out.println(coll.find().first());
-
-        PeripheralManager manager = PeripheralManager.getInstance();
-        Log.d(TAG, "Available GPIO: " + manager.getGpioList());
-
-        Log.d(TAG, "Available GPIO: " + manager.getI2cBusList());
-
-        List<String> portList = manager.getPwmList();
-        if (portList.isEmpty()) {
-            Log.i(TAG, "No PWM port available on this device.");
-        } else {
-            Log.i(TAG, "List of available ports: " + portList);
-        }
+//        final PCA9685 pwm = new PCA9685();
+//        try {
+//            pwm.setFrequency(60);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//
+//        for (int i = 0; i < 16; i++) {
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//                return;
+//            }
+//            Log.d(TAG, String.format("\nChannel %d\n", i));
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//                return;
+//            }
+//            for (int j = 0; j < 4096; j++) {
+//                pwm.write(i, 0, j);
+//                Log.d(TAG, String.format("PCA9685 value: %d", j));
+//                try {
+//                    Thread.sleep(1);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                    return;
+//                }
+//            }
+//        }
+//
+//        try {
+//            final I2cDevice device = PeripheralManager.getInstance().openI2cDevice("I2C1", 0x40);
+//            byte[] buf = new byte[10];
+//            device.getName();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         try {
-            Servo.install();
+//            Servo.install();
+//            Servo.test();
+            Pwm pwm1 = PeripheralManager.getInstance().openPwm("PWM1");
+            for (int i = 0; i < 10; i++) {
+                pwm1.setEnabled(false);
+                pwm1.setPwmDutyCycle(i*4);
+                pwm1.setPwmFrequencyHz(60);
+                pwm1.setEnabled(true);
+                Thread.sleep(1000);
+            }
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+            return;
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private GpioCallback mCallback = new GpioCallback() {
@@ -124,12 +183,12 @@ public class HomeActivity extends Activity {
                 mIsPulseIncreasing = !mIsPulseIncreasing;
             }
 
-            Log.d(TAG, "Changing PWM active pulse duration to " + mActivePulseDuration + " ms");
+            Log.d(TAG, "Changing PCA9685 active pulse duration to " + mActivePulseDuration + " ms");
 
             try {
 
                 // Duty cycle is the percentage of active (on) pulse over the total duration of the
-                // PWM pulse
+                // PCA9685 pulse
                 mLEDPwm.setPwmDutyCycle(100 * mActivePulseDuration / PULSE_PERIOD_MS);
 
             } catch (IOException e) {

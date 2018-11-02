@@ -103,7 +103,8 @@ public class Motor {
 
     public void setPWM(PWM pwm){this.pwm = pwm;}
 
-    public void test(){
+    //Should this be a separate class like 'MotorTest'?
+    public void test() throws IOException, InterruptedException {
 
         /*
         SunFounder TB6612
@@ -114,58 +115,79 @@ public class Motor {
         Connect PWMB to BCM12
         */
 
-        GPIO.setup((27, 22), GPIO.OUT)
-        a = GPIO.PWM(27, 60)
-        b = GPIO.PWM(22, 60)
-        a.start(0)
-        b.start(0)
+        int i;
+        int delay = 50;
+
+        //Set-up GPIO out access on BCM27/BCM22
+        GPIO.setup((27, 22), GPIO.OUT);
+
+        a = GPIO.PWM(27, 60);
+        b = GPIO.PWM(22, 60);
+
+        a.start(0);
+        b.start(0);
 
         def a_speed(value):
-        a.ChangeDutyCycle(value)
+        a.ChangeDutyCycle(value);
 
         def b_speed(value):
-        b.ChangeDutyCycle(value)
+        b.ChangeDutyCycle(value);
 
-        motorA = Motor(23)
-        motorB = Motor(24)
-        motorA.debug = True
-        motorB.debug = True
-        motorA.pwm = a_speed
-        motorB.pwm = b_speed
+        Motor motorA = new Motor(23);
+        Motor motorB = new Motor(24);
 
-        delay = 0.05
+        motorA.pwm = a_speed;
+        motorB.pwm = b_speed;
 
-        motorA.forward()
-        for i in range(0, 101):
-        motorA.speed = i
-        time.sleep(delay)
-        for i in range(100, -1, -1):
-        motorA.speed = i
-        time.sleep(delay)
 
-        motorA.backward()
-        for i in range(0, 101):
-        motorA.speed = i
-        time.sleep(delay)
-        for i in range(100, -1, -1):
-        motorA.speed = i
-        time.sleep(delay)
 
-        motorB.forward()
-        for i in range(0, 101):
-        motorB.speed = i
-        time.sleep(delay)
-        for i in range(100, -1, -1):
-        motorB.speed = i
-        time.sleep(delay)
+        motorA.forward();
 
-        motorB.backward()
-        for i in range(0, 101):
-        motorB.speed = i
-        time.sleep(delay)
-        for i in range(100, -1, -1):
-        motorB.speed = i
-        time.sleep(delay)
+        for(i = 0; i < 101; i++){
+            motorA.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        for(i = 100; i > -1 ; i--){
+            motorA.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        motorA.backward();
+
+        for(i = 0; i < 101; i++){
+            motorA.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        for(i = 100; i > -1 ; i--){
+            motorA.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        motorB.forward();
+
+        for(i = 0; i < 101; i++){
+            motorB.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        for(i = 100; i > -1 ; i--){
+            motorB.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        motorB.backward();
+
+        for(i = 0; i < 101; i++){
+            motorB.setSpeed(i);
+            Thread.sleep(50);
+        }
+
+        for(i = 100; i > -1 ; i--){
+            motorB.setSpeed(i);
+            Thread.sleep(50);
+        }
     }
 
 }

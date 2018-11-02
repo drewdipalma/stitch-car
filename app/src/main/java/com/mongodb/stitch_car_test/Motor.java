@@ -21,7 +21,7 @@ public class Motor {
     Set debug to True to print out debug informations.
     */
 
-    public PWM pwm;
+    public Pwm mPwm;
     public Boolean offset;
     public Boolean forward_offset;
     public Boolean backward_offset;
@@ -31,10 +31,10 @@ public class Motor {
     public Gpio mGpio;
 
 
-    Motor(String direction_channel, PWM pwm, Boolean offset) throws IOException {
+    Motor(String direction_channel, Pwm mPwm, Boolean offset) throws IOException {
         //Init a motor on giving direction channel and PWM channel.'''
         this.direction_channel = direction_channel;
-        this.pwm = pwm;
+        this.mPwm = mPwm;
         if(offset != null){
             this.offset = offset;
             this.forward_offset = offset;
@@ -58,14 +58,14 @@ public class Motor {
             throw new java.lang.Error("Speed must range from 0 to 100");
         }
 
-        if(pwm == null) {
+        if(mPwm == null) {
             throw new java.lang.Error("PWM not callable");
         }
 
         this.speed = speed;
 
         try {
-            pwm.setFrequency(speed);
+            mPwm.setPwmFrequencyHz(speed);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,9 +99,9 @@ public class Motor {
         this.backward_offset = !this.forward_offset;
     }
 
-    public PWM getPWM(){return pwm;}
+    public Pwm getPWM(){return mPwm;}
 
-    public void setPWM(PWM pwm){this.pwm = pwm;}
+    public void setPwm(Pwm mPwm){this.mPwm = mPwm;}
 
     //Should this be a separate class like 'MotorTest'?
     public void test() throws IOException, InterruptedException {
@@ -118,75 +118,79 @@ public class Motor {
         int i;
         int delay = 50;
 
-        //Set-up GPIO out access on BCM27/BCM22
-        GPIO.setup((27, 22), GPIO.OUT);
+        // Originally, this code set-up GPIO out access on BCM27/BCM22 (though top comment seems to imply 12?)
+        // GPIO.setup((27, 22), GPIO.OUT);
+        // a = GPIO.PWM(27, 60);
+        // b = GPIO.PWM(22, 60);
 
-        a = GPIO.PWM(27, 60);
-        b = GPIO.PWM(22, 60);
+        Pwm mPwmA = manager.openPwm("PMW0");
+        Pwm mPwmB = manager.openPwm("PMW1");
 
-        a.start(0);
-        b.start(0);
+        //Enable Pwm A
+        mPwmA.setPwmFrequencyHz(60);
+        mPwmA.setPwmDutyCycle(0);
+        mPwmA.setEnabled(true);
 
-        def a_speed(value):
-        a.ChangeDutyCycle(value);
+        //Enable Pwm B
+        mPwmB.setPwmFrequencyHz(60);
+        mPwmB.setPwmDutyCycle(0);
+        mPwmB.setEnabled(true);
 
-        def b_speed(value):
-        b.ChangeDutyCycle(value);
+        //def a_speed(value):
+        //a.ChangeDutyCycle(value);
 
-        Motor motorA = new Motor(23);
-        Motor motorB = new Motor(24);
+        //def b_speed(value):
+        //b.ChangeDutyCycle(value);
 
-        motorA.pwm = a_speed;
-        motorB.pwm = b_speed;
-
-
+        Motor motorA = new Motor("BCM23", mPwmA, null);
+        Motor motorB = new Motor("BCM24", mPwmB, null);
 
         motorA.forward();
 
         for(i = 0; i < 101; i++){
             motorA.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         for(i = 100; i > -1 ; i--){
             motorA.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         motorA.backward();
 
         for(i = 0; i < 101; i++){
             motorA.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         for(i = 100; i > -1 ; i--){
             motorA.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         motorB.forward();
 
         for(i = 0; i < 101; i++){
             motorB.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         for(i = 100; i > -1 ; i--){
             motorB.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         motorB.backward();
 
         for(i = 0; i < 101; i++){
             motorB.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
 
         for(i = 100; i > -1 ; i--){
             motorB.setSpeed(i);
-            Thread.sleep(50);
+            Thread.sleep(delay);
         }
     }
 

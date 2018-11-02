@@ -2,6 +2,7 @@ package com.mongodb.stitch_car_test;
 
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
+import com.google.android.things.pio.Pwm;
 
 import java.io.IOException;
 
@@ -146,9 +147,8 @@ public class Motor {
         //def b_speed(value)
         //b.ChangeDutyCycle(value);
 
-        //This is erroring, not sure why
-        motorA = new Motor(dirA, mPwmA, null);
-        motorB = new Motor(dirB, mPwmB, null);
+        Motor motorA = new Motor(dirA, mPwmA, null);
+        Motor motorB = new Motor(dirB, mPwmB, null);
 
         motorA.forward();
 

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.mongodb:mongodb-driver-embedded-android-3.9.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mongodb-driver-embedded-android-3.9.0-SNAPSHOT.aar/97ddd61a6129bab6f6ef7fc9441e65ef/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mongodb-driver-embedded-android-3.9.0-SNAPSHOT.aar/97ddd61a6129bab6f6ef7fc9441e65ef/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver-embedded-android/3.9.0-SNAPSHOT/a514d19965be7d1f5e5f19a5d5396aee571b1fc/mongodb-driver-embedded-android-3.9.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

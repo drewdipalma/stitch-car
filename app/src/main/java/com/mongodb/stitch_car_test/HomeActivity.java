@@ -96,10 +96,8 @@ public class HomeActivity extends Activity {
         }
 
         try {
-            Servo.test();
+            Servo.install();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

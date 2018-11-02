@@ -4,12 +4,15 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import static java.lang.Boolean.TRUE;
+
+// Translation of PWM class (PCA9685.py)
+// https://github.com/sunfounder/SunFounder_PCA9685/blob/4f3023c28c6a8e10ec1d6d9811b997757fb1e27a/PCA9685.py
 public class Servo {
     // Servo driver class
     public int MIN_PULSE_WIDTH = 600;
     public int MAX_PULSE_WIDTH = 2400;
     public int DEFAULT_PULSE_WIDTH = 1500;
-    public int FREQUENCY = 60;
 
     PWM pwm;
 
@@ -20,10 +23,10 @@ public class Servo {
     public int address;
     public int frequency;
 
-    Servo(int channel, Integer offset, Boolean lock, String bus_name, Integer address){
+    Servo(int channel, Integer offset, Boolean lock, String bus_name, Integer address) throws IOException {
         // Init a servo on specific channel, this offset
         if(channel < 0 || channel > 16){
-            throw new java.lang.Error("Servo channel (\"{0}\") out of bounds");
+            throw new java.lang.Error("Servo channel out of bounds");
         }
 
         this.channel = channel;
@@ -37,7 +40,7 @@ public class Servo {
         if (lock != null){
             this.lock = lock;
         }else{
-            this.lock = Boolean.TRUE;
+            this.lock = TRUE;
         }
 
         if (bus_name != null){
@@ -49,29 +52,34 @@ public class Servo {
         if (address != null){
             this.address = address;
         }else{
-            this.address = 0x70;
+            this.address = 0x40;
         }
 
         this.pwm = new PWM(bus_name, address);
-        this.frequency = FREQUENCY;
+        setFrequency(60);
 
+        write(90);
     }
 
     public void setup() throws IOException {
-        this.pwm.setup();
+        pwm.setup();
     }
 
     public int angleToAnalog(int angle){
         // Calculate 12-bit analog value from given angle
         int pulse_wide = pwm.map(angle, 0, 180, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
-        return (int)((float) pulse_wide / 1000000 * this.frequency * 4096);
+        int analog_value = (int)((float) pulse_wide / 1000000.0 * frequency * 4096.0);
+        Log.i("ServoTest2", "Angle value: " + angle);
+        Log.i("ServoTest2", "Pulse value: " + pulse_wide);
+        Log.i("ServoTest2", "Analog value: " + analog_value);
+        return analog_value;
     }
 
-    public int getFrequency() {return this.frequency;}
+    public int getFrequency() {return frequency;}
 
     public void setFrequency(int value) throws IOException {
-        this.frequency = value;
-        this.pwm.setFrequency(value);
+        setFrequency(value);
+        pwm.setFrequency(value);
     }
 
     public int getOffset() {return this.offset;}
@@ -92,8 +100,8 @@ public class Servo {
         }
 
         int val = angleToAnalog(angle);
-        val += this.offset;
-        this.pwm.write(this.channel, 0, val);
+        val += offset;
+        pwm.write(channel, 0, val);
     }
 
     public static void test() throws IOException, InterruptedException {
@@ -105,13 +113,19 @@ public class Servo {
         for(i = 45; i < 135; i += 5){
             Log.i("ServoTest1", "Value: " + i);
             a.write(i);
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
 
         for(i = 135; i > 45; i -= 5){
             Log.i("ServoTest2", "Value: " + i);
             a.write(i);
-            Thread.sleep(1000);
+            Thread.sleep(100);
+        }
+
+        for(i = 45; i < 91; i += 2){
+            Log.i("ServoTest2", "Value: " + i);
+            a.write(i);
+            Thread.sleep(100);
         }
     }
 

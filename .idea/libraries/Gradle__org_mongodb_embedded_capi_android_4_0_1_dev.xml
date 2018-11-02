@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.mongodb:embedded-capi-android-4.0.1-dev">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/embedded-capi-android-4.0.1-dev.aar/33ee256ad8023a74d1baa581804d9950/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/embedded-capi-android-4.0.1-dev.aar/33ee256ad8023a74d1baa581804d9950/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mongodb/embedded-capi-android/4.0.1-dev/5abc92678c8c3ebb219b0ca8605d2d695dd864c9/embedded-capi-android-4.0.1-dev-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

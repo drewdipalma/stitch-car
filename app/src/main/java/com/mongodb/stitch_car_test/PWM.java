@@ -9,7 +9,9 @@ import org.bson.Document;
 
 import java.io.IOException;
 
-// A PWM control class for PCA9685
+// Translation of PWM class (PCA9685.py)
+// https://github.com/sunfounder/SunFounder_PCA9685/blob/4f3023c28c6a8e10ec1d6d9811b997757fb1e27a/PCA9685.py
+
 class PWM {
     private static final String TAG = "PWM_CLASS";
     private I2cDevice mDevice;
@@ -74,15 +76,15 @@ class PWM {
             e.printStackTrace();
         }
 
-        frequency = 60;
+        setFrequency(60);
     }
 
-    public int getFrequency() {return this.frequency;}
+    public int getFrequency() {return frequency;}
 
     public void setFrequency(int freq) throws IOException {
         //Set PWM frequency
 
-        this.frequency = freq;
+        setFrequency(freq);
         double prescale_value = 25000000.0;
         prescale_value /= 4096.0;
         prescale_value /= (float) freq;
@@ -145,7 +147,7 @@ class PWM {
     public void openDevice() throws IOException {
         PeripheralManager manager = PeripheralManager.getInstance();
         try{
-            this.mDevice = manager.openI2cDevice(bus_name, address);
+            mDevice = manager.openI2cDevice(bus_name, address);
         } catch (IOException e) {
             Log.w(TAG, "Unable to open I2C device", e);
         }

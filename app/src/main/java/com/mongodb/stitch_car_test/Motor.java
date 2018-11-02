@@ -125,6 +125,8 @@ public class Motor {
 
         Pwm mPwmA = manager.openPwm("PMW0");
         Pwm mPwmB = manager.openPwm("PMW1");
+        String dirA = "BCM23";
+        String dirB = "BCM24";
 
         //Enable Pwm A
         mPwmA.setPwmFrequencyHz(60);
@@ -136,14 +138,17 @@ public class Motor {
         mPwmB.setPwmDutyCycle(0);
         mPwmB.setEnabled(true);
 
-        //def a_speed(value):
+
+        //Functions which change the Duty cycle, not sure how these are to be handled, my work up stack and then come back to these?
+        //def a_speed(value)
         //a.ChangeDutyCycle(value);
 
-        //def b_speed(value):
+        //def b_speed(value)
         //b.ChangeDutyCycle(value);
 
-        Motor motorA = new Motor("BCM23", mPwmA, null);
-        Motor motorB = new Motor("BCM24", mPwmB, null);
+        //This is erroring, not sure why
+        motorA = new Motor(dirA, mPwmA, null);
+        motorB = new Motor(dirB, mPwmB, null);
 
         motorA.forward();
 

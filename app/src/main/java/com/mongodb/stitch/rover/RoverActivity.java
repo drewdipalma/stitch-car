@@ -68,6 +68,12 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
         doLogin();
+
+        try {
+            Servo.test();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void doLogin() {
@@ -128,6 +134,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
 
     private void doMove(final Move move) {
         Log.i(TAG, "Doing move " + move);
+        Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
     }
 
     @Override

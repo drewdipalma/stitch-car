@@ -34,8 +34,6 @@ import com.mongodb.stitch.core.services.mongodb.remote.sync.ConflictHandler;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.internal.ChangeEvent;
 
 //General Document Classes
-import org.bson.BsonObjectId;
-import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;

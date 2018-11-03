@@ -17,12 +17,14 @@ public class Back_Wheels {
     public Boolean forwardA;
     public Boolean forwardB;
 
-    public PWM pwm;
+    public PCA9685 pwm;
 
-    public String busName;
+    public Integer busNumber = 1;
     public String db;
 
-    Back_Wheels(String busName, String db) throws IOException {
+    public Integer address = 0x40;
+
+    Back_Wheels(Integer busNumber, String db) throws IOException {
         // TBD
         // self.db = filedb.fileDB(db=db)
 
@@ -34,25 +36,26 @@ public class Back_Wheels {
         Motor leftWheel = new Motor(MotorA, null, forwardA);
         Motor rightWheel = new Motor(MotorB, null, forwardB);
 
-        pwm = new PWM(busName, null);
+        pwm = new PCA9685(busNumber, address);
 
-        setPwmValue(PWMA, 0)
+        //setPwmValue(PWMA, 0, pwm);
+
         //self.pwm.write(self.PWM_A, 0, pulse_wide);
 
         //def _set_b_pwm(value):
         //pulse_wide = self.pwm.map(value, 0, 100, 0, 4095)
         //self.pwm.write(self.PWM_B, 0, pulse_wide)
 
-        leftWheel.setPwm(aPwm);
-        rightWheel.setPwm(bPwm);
+       // leftWheel.setPwm(aPwm);
+       // rightWheel.setPwm(bPwm);
 
         setSpeed(0);
     }
 
-    public void setPwmValue( int pwmNum, int value, PWM pwm){
-        int pulse_wide = pwm.map(value, 0, 100, 0, 4095);
-        pwm.write(pwmNum, 0, pulse_wide);
-    }
+   // public void setPwmValue( int pwmNum, int value, PWM pwm){
+   //     int pulse_wide = pwm.map(value, 0, 100, 0, 4095);
+   //     pwm.write(pwmNum, 0, pulse_wide);
+   // }
 
     public void setSpeed(int speed){
 

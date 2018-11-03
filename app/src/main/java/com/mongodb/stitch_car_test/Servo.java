@@ -43,7 +43,7 @@ public class Servo implements Closeable {
         final boolean lock,
         final Integer busNumber,
         final int address
-    ) {
+    ) throws InterruptedException {
 
         // Init a servo on specific channel, this offset
         if(channel < 0 || channel > 16){
@@ -57,11 +57,11 @@ public class Servo implements Closeable {
         this.lock = lock;
 
         this.pca9685 = new PCA9685(busNumber, address);
-        this.frequency = FREQUENCY;
+        setFrequency(FREQUENCY);
         write(90);
     }
 
-    public Servo(final int channel) {
+    public Servo(final int channel) throws InterruptedException {
         this(channel, 0, true, null, 0x40);
     }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mongodb.stitch_car_test;
+package com.mongodb.stitch.rover;
 
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;

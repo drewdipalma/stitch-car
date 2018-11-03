@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mongodb.stitch_car_test;
+package com.mongodb.stitch.rover;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -32,6 +32,7 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.ConflictHandler;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.internal.ChangeEvent;
+import com.mongodb.stitch_car_test.R;
 
 //General Document Classes
 import org.bson.BsonValue;

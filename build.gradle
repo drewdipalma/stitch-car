@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+def configDir = new File(rootDir, 'config')
 
 buildscript {
     
@@ -8,10 +8,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -21,6 +17,29 @@ allprojects {
         jcenter()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+
+    apply plugin: 'checkstyle'
+
+    checkstyle {
+        toolVersion = "8.10"
+        configFile = new File(configDir, 'checkstyle.xml')
+        configProperties.checkstyleConfigDir = configDir
+    }
+
+    task checkstyle(type: Checkstyle) {
+        configFile = new File(configDir, 'checkstyle.xml')
+        configProperties.checkstyleConfigDir = configDir
+        source 'src/main/java', 'src/test/java'
+        include '**/*.java'
+        exclude '**/gen/**'
+        classpath = files()
+
+        reports {
+            xml.enabled = false
+            html.enabled = true
+            html.setDestination new File("$project.buildDir/outputs/checkstyle/checkstyle.html")
         }
     }
 }

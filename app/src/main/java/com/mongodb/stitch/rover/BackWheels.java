@@ -1,4 +1,20 @@
-package com.mongodb.stitch_car_test;
+/*
+ * Copyright 2018-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.mongodb.stitch.rover;
 
 // Translation of Front Wheels class (back_wheels.py)
 // https://github.com/sunfounder/SunFounder_PiCar/blob/master/picar/back_wheels.py
@@ -7,7 +23,7 @@ import java.io.IOException;
 
 import static java.lang.Boolean.TRUE;
 
-public class Back_Wheels {
+public class BackWheels {
     public String MotorA = "BCM17";
     public String MotorB = "BCM27";
 
@@ -24,7 +40,7 @@ public class Back_Wheels {
 
     public Integer address = 0x40;
 
-    Back_Wheels(Integer busNumber, String db) throws IOException {
+    BackWheels(Integer busNumber, String db) throws IOException {
         // TBD
         // self.db = filedb.fileDB(db=db)
 

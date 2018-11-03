@@ -1,4 +1,20 @@
-package com.mongodb.stitch_car_test;
+/*
+ * Copyright 2018-present MongoDB, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.mongodb.stitch.rover;
 
 // Translation of Front Wheels class (front_wheels.py)
 // https://github.com/sunfounder/SunFounder_PiCar/blob/master/picar/front_wheels.py
@@ -8,7 +24,7 @@ import org.bson.Document;
 
 import java.io.IOException;
 
-public class Front_Wheels {
+public class FrontWheels {
     //Front wheels control class
     int FRONT_WHEEL_CHANNEL = 0;
     public String db;
@@ -25,7 +41,7 @@ public class Front_Wheels {
     public int turningOffset;
     public int cali_turning_offset;
 
-    Front_Wheels(String db, String busName, Integer channel) throws IOException {
+    FrontWheels(String db, String busName, Integer channel) throws IOException {
 
         // TBD if we need this
         // db = filedb.fileDB(db=db)
@@ -145,7 +161,7 @@ public class Front_Wheels {
 
 
     public void test( int chn) throws IOException, InterruptedException {
-        Front_Wheels front_wheels = new Front_Wheels(null, null, chn);
+        FrontWheels front_wheels = new FrontWheels(null, null, chn);
 
         for( int i = 0; i < 10; i++){
             front_wheels.turnLeft();

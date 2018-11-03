@@ -7,7 +7,7 @@
     <application>
         <uses-library android:name="com.google.android.things" />
 
-        <activity android:name=".RoverActivity">
+        <activity android:name="com.mongodb.stitch.rover.RoverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

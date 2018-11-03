@@ -146,20 +146,20 @@ public class HomeActivity extends Activity {
 
         try {
 //            Servo.install();
-//            Servo.test();
-            Pwm pwm1 = PeripheralManager.getInstance().openPwm("PWM1");
-            for (int i = 0; i < 10; i++) {
-                pwm1.setEnabled(false);
-                pwm1.setPwmDutyCycle(i*4);
-                pwm1.setPwmFrequencyHz(60);
-                pwm1.setEnabled(true);
-                Thread.sleep(1000);
-            }
+           Servo.test();
+            //Pwm pwm1 = PeripheralManager.getInstance().openPwm("PWM1");
+           // for (int i = 0; i < 10; i++) {
+             //   pwm1.setEnabled(false);
+               // pwm1.setPwmDutyCycle(i*4);
+          //      pwm1.setPwmFrequencyHz(60);
+            //    pwm1.setEnabled(true);
+              //  Thread.sleep(1000);
+          //  }
         } catch (final InterruptedException e) {
             e.printStackTrace();
-            return;
-        } catch (IOException e) {
-            e.printStackTrace();
+         //   return;
+        //} catch (IOException e) {
+          //  e.printStackTrace();
         }
     }
 

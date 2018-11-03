@@ -22,11 +22,7 @@ public class Motor {
     Set debug to True to print out debug informations.
     */
 
-<<<<<<< HEAD
-    public Pwm mPwm;
-=======
     public PCA9685 pwm;
->>>>>>> help
     public Boolean offset;
     public Boolean forward_offset;
     public Boolean backward_offset;
@@ -36,15 +32,10 @@ public class Motor {
     public Gpio mGpio;
 
 
-<<<<<<< HEAD
-    Motor(String direction_channel, Pwm mPwm, Boolean offset) throws IOException {
-        //Init a motor on giving direction channel and PWM channel.'''
-=======
     Motor(String direction_channel, PCA9685 pwm, Boolean offset) throws IOException {
         //Init a motor on giving direction channel and PCA9685 channel.'''
->>>>>>> help
         this.direction_channel = direction_channel;
-        this.mPwm = mPwm;
+//        this.mPwm = mPwm;
         if(offset != null){
             this.offset = offset;
             this.forward_offset = offset;
@@ -68,26 +59,13 @@ public class Motor {
             throw new java.lang.Error("Speed must range from 0 to 100");
         }
 
-<<<<<<< HEAD
-        if(mPwm == null) {
-            throw new java.lang.Error("PWM not callable");
-=======
         if(pwm == null) {
             throw new java.lang.Error("PCA9685 not callable");
->>>>>>> help
         }
 
         this.speed = speed;
 
-<<<<<<< HEAD
-        try {
-            mPwm.setPwmFrequencyHz(speed);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-=======
         pwm.setFrequency(speed);
->>>>>>> help
     }
 
     public void forward() throws IOException, InterruptedException {
@@ -118,10 +96,9 @@ public class Motor {
         this.backward_offset = !this.forward_offset;
     }
 
-<<<<<<< HEAD
-    public Pwm getPWM(){return mPwm;}
-
-    public void setPwm(Pwm mPwm){this.mPwm = mPwm;}
+//    public Pwm getPWM(){return mPwm;}
+//
+//    public void setPwm(Pwm mPwm){this.mPwm = mPwm;}
 
     //Should this be a separate class like 'MotorTest'?
     public void test() throws IOException, InterruptedException {
@@ -166,148 +143,55 @@ public class Motor {
         //def b_speed(value)
         //b.ChangeDutyCycle(value);
 
-        Motor motorA = new Motor(dirA, mPwmA, null);
-        Motor motorB = new Motor(dirB, mPwmB, null);
+//        Motor motorA = new Motor(dirA, mPwmA, null);
+//        Motor motorB = new Motor(dirB, mPwmB, null);
 
-        motorA.forward();
-
-        for(i = 0; i < 101; i++){
-            motorA.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        for(i = 100; i > -1 ; i--){
-            motorA.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        motorA.backward();
-
-        for(i = 0; i < 101; i++){
-            motorA.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        for(i = 100; i > -1 ; i--){
-            motorA.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        motorB.forward();
-
-        for(i = 0; i < 101; i++){
-            motorB.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        for(i = 100; i > -1 ; i--){
-            motorB.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        motorB.backward();
-
-        for(i = 0; i < 101; i++){
-            motorB.setSpeed(i);
-            Thread.sleep(delay);
-        }
-
-        for(i = 100; i > -1 ; i--){
-            motorB.setSpeed(i);
-            Thread.sleep(delay);
-        }
-    }
-=======
-    public PCA9685 getPWM(){return pwm;}
-
-    public void setPWM(PCA9685 pwm){this.pwm = pwm;}
-
-    //Should this be a separate class like 'MotorTest'?
-//    public void test() throws IOException, InterruptedException {
-//
-//        /*
-//        SunFounder TB6612
-//
-//        Connect MA to BCM17
-//        Connect MB to BCM18
-//        Connect PWMA to BCM27
-//        Connect PWMB to BCM12
-//        */
-//
-//        int i;
-//        int delay = 50;
-//
-//        //Set-up GPIO out access on BCM27/BCM22
-//        GPIO.setup((27, 22), GPIO.OUT);
-//
-//        a = GPIO.PCA9685(27, 60);
-//        b = GPIO.PCA9685(22, 60);
-//
-//        a.start(0);
-//        b.start(0);
-//
-//        def a_speed(value):
-//        a.ChangeDutyCycle(value);
-//
-//        def b_speed(value):
-//        b.ChangeDutyCycle(value);
-//
-//        Motor motorA = new Motor(23);
-//        Motor motorB = new Motor(24);
-//
-//        motorA.pwm = a_speed;
-//        motorB.pwm = b_speed;
-//
-//
-//
 //        motorA.forward();
 //
 //        for(i = 0; i < 101; i++){
 //            motorA.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        for(i = 100; i > -1 ; i--){
 //            motorA.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        motorA.backward();
 //
 //        for(i = 0; i < 101; i++){
 //            motorA.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        for(i = 100; i > -1 ; i--){
 //            motorA.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        motorB.forward();
 //
 //        for(i = 0; i < 101; i++){
 //            motorB.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        for(i = 100; i > -1 ; i--){
 //            motorB.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        motorB.backward();
 //
 //        for(i = 0; i < 101; i++){
 //            motorB.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
 //
 //        for(i = 100; i > -1 ; i--){
 //            motorB.setSpeed(i);
-//            Thread.sleep(50);
+//            Thread.sleep(delay);
 //        }
-//    }
->>>>>>> help
-
+    }
 }

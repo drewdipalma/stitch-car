@@ -196,12 +196,12 @@ public class PCA9685 implements Closeable {
       writeAllValue(0, 0);
       writeByteData(MODE2, OUTDRV);
       writeByteData(MODE1, ALLCALL);
-      Thread.sleep(5);
+      Thread.sleep(25);
 
       int mode1 = readByteData(MODE1);
       mode1 = mode1 & ~SLEEP;
       writeByteData(MODE1, mode1);
-      Thread.sleep(5);
+      Thread.sleep(25);
       setFrequency(60);
     }
 
@@ -281,7 +281,7 @@ public class PCA9685 implements Closeable {
       writeByteData(MODE1, newMode);
       writeByteData(PRESCALE, (int) Math.floor(prescale));
       writeByteData(MODE1, oldMode);
-      Thread.sleep(5);
+      Thread.sleep(25);
       writeByteData(MODE1, oldMode | 0x80);
     }
 

@@ -55,7 +55,7 @@ public class Front_Wheels {
         //TBD if this is needed
         // this.turning_offset = int(self.db.get('turning_offset', default_value=0));
 
-        Servo wheel = new Servo(channel, turningOffset, null, busName, null);
+//        Servo wheel = new Servo(channel, turningOffset, null, busName, null);
     }
 
     public void turnLeft(){

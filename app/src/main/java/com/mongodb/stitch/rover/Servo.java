@@ -167,8 +167,6 @@ public class Servo implements Closeable {
     public static void test() throws InterruptedException {
         final Servo a = new Servo(0);
         a.setup();
-//        a.write(70);
-
         for (int i = 0; i < 180; i += 5) {
             Log.d(TAG, Integer.toString(i));
             a.write(i);

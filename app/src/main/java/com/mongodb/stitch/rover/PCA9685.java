@@ -212,13 +212,13 @@ public class PCA9685 implements Closeable {
       writeAllValue(0, 0);
       writeByteData(MODE2, OUTDRV);
       writeByteData(MODE1, ALLCALL);
-      Thread.sleep(25);
+      Thread.sleep(5);
 
       int mode1 = readByteData(MODE1);
       mode1 = mode1 & ~SLEEP;
       writeByteData(MODE1, mode1);
-      Thread.sleep(25);
-      setFrequency(60);
+      Thread.sleep(5);
+      this.frequency = 60;
     }
 
   /**
@@ -232,7 +232,7 @@ public class PCA9685 implements Closeable {
       }
 
       try {
-        this.bus.writeRegByte(reg, (byte) (value & 0XFF));
+        this.bus.writeRegByte(reg, (byte) (value & 0xFF));
       } catch (IOException e) {
         e.printStackTrace();
         checkI2C();
@@ -274,7 +274,7 @@ public class PCA9685 implements Closeable {
    */
     public void setFrequency(final int freq) throws InterruptedException {
       if (debug) {
-        Log.d(TAG, String.format("Setting PCA9685 frequency to %d Hz", freq));
+        Log.d(TAG, String.format("Setting frequency to %d", freq));
       }
       this.frequency = freq;
 
@@ -285,11 +285,11 @@ public class PCA9685 implements Closeable {
 
       if (debug) {
         Log.d(TAG, String.format("Setting PCA9685 frequency to %d Hz", freq));
-        Log.d(TAG, String.format("Estimated pre-scale: %f", prescaleValue));
+        Log.d(TAG, String.format("Estimated pre-scale: %d", (int) prescaleValue));
       }
       final double prescale = Math.floor(prescaleValue + 0.5);
       if (debug) {
-        Log.d(TAG, String.format("Final pre-scale: %f", prescale));
+        Log.d(TAG, String.format("Final pre-scale: %d", (int) prescale));
       }
 
       final int oldMode = readByteData(MODE1);
@@ -297,7 +297,7 @@ public class PCA9685 implements Closeable {
       writeByteData(MODE1, newMode);
       writeByteData(PRESCALE, (int) Math.floor(prescale));
       writeByteData(MODE1, oldMode);
-      Thread.sleep(25);
+      Thread.sleep(5);
       writeByteData(MODE1, oldMode | 0x80);
     }
 

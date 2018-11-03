@@ -34,13 +34,14 @@ import com.mongodb.stitch.core.services.mongodb.remote.sync.ConflictHandler;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.internal.ChangeEvent;
 
 //General Document Classes
+import org.bson.BsonObjectId;
+import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RoverActivity extends Activity implements ConflictHandler<Rover> {
@@ -112,10 +113,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
                 }
                 moveLoop();
             } else {
-                final Document move = rover.getMoves().get(0);
+                final Move move = rover.getMoves().get(0);
                 doMove(move);
                 final Document update = new Document("$pull", new Document("moves",
-                    new Document("_id", move.getObjectId("_id"))));
+                    new Document("_id", move.getId())));
                 rovers.sync().updateOne(getRoverFilter(), update).addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         Log.d(TAG, "failed to update rover document", task.getException());
@@ -126,8 +127,8 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         }).addOnFailureListener(e -> Log.d(TAG, "failed to find rover document", e));
     }
 
-    private void doMove(final Document move) {
-        Log.i(TAG, "Doing move " + move.toJson());
+    private void doMove(final Move move) {
+        Log.i(TAG, "Doing move " + move);
     }
 
     @Override
@@ -147,10 +148,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         final Rover localRover = localEvent.getFullDocument();
         final ObjectId lastMoveCompleted = localRover.getLastMoveCompleted();
         final Rover remoteRover = remoteEvent.getFullDocument();
-        final List<Document> nextMoves = new ArrayList<>(remoteRover.getMoves().size());
+        final List<Move> nextMoves = new ArrayList<>(remoteRover.getMoves().size());
         boolean caughtUp = false;
-        for (final Document move : remoteRover.getMoves()) {
-            if (move.getObjectId("_id").equals(lastMoveCompleted)) {
+        for (final Move move : remoteRover.getMoves()) {
+            if (move.getId().equals(lastMoveCompleted)) {
                 caughtUp = true;
             }
             if (caughtUp) {

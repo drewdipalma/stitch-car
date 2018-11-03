@@ -23,7 +23,6 @@ import org.bson.BsonReader;
 import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -41,12 +40,12 @@ class Rover {
 
   private final String id;
   private final ObjectId lastMoveCompleted;
-  private final List<Document> moves;
+  private final List<Move> moves;
 
   Rover(
       final String id,
       final ObjectId lastMoveCompleted,
-      final List<Document> moves
+      final List<Move> moves
   ) {
     this.id = id;
     this.lastMoveCompleted = lastMoveCompleted;
@@ -57,7 +56,7 @@ class Rover {
     this(userId, null, Collections.emptyList());
   }
 
-  public Rover(final Rover rover, List<Document> moves) {
+  public Rover(final Rover rover, List<Move> moves) {
     this(rover.getId(), rover.getLastMoveCompleted(), moves);
   }
 
@@ -69,7 +68,7 @@ class Rover {
     return lastMoveCompleted;
   }
 
-  public List<Document> getMoves() {
+  public List<Move> getMoves() {
     return moves;
   }
 
@@ -80,8 +79,8 @@ class Rover {
       asDoc.put(Fields.LAST_MOVE_COMPLETED, new BsonObjectId(rover.getLastMoveCompleted()));
     }
     final BsonArray movesArr = new BsonArray();
-    for (final Document move : rover.getMoves()) {
-      movesArr.add(BsonDocument.parse(move.toJson()));
+    for (final Move move : rover.getMoves()) {
+      movesArr.add(Move.toBsonDocument(move));
     }
     asDoc.put(Fields.MOVES, movesArr);
     return asDoc;
@@ -94,12 +93,12 @@ class Rover {
     } else {
       lastMoveCompleted = null;
     }
-    final List<Document> moves;
+    final List<Move> moves;
     if (doc.containsKey(Fields.MOVES)) {
       final BsonArray movesArr = doc.getArray(Fields.MOVES);
       moves = new ArrayList<>(movesArr.size());
       for (final BsonValue moveVal : movesArr) {
-        moves.add(Document.parse(moveVal.asDocument().toJson()));
+        moves.add(Move.fromBsonDocument(moveVal.asDocument()));
       }
     } else {
       moves = Collections.emptyList();

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Stitch_Car_Test</string>
+    <string name="stitch_client_app_id">stitch-rover-gfhpg</string>
+    <string name="stitch_rover_api_key">oQAQKa2FJEgJt1lR65AMUn1SQkW7HdOpLlPNgU7QJJYGUGgvCite9dpPP9HYW0TG</string>
 </resources>

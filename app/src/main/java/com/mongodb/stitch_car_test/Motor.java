@@ -136,15 +136,15 @@ public class Motor {
         mPwmB.setEnabled(true);
 
 
-        //Functions which change the Duty cycle, not sure how these are to be handled, my work up stack and then come back to these?
+        //Functions which change the Duty cycle, not sure how these are to be handled, may work up stack and then come back to these?
         //def a_speed(value)
         //a.ChangeDutyCycle(value);
 
         //def b_speed(value)
         //b.ChangeDutyCycle(value);
 
-//        Motor motorA = new Motor(dirA, mPwmA, null);
-//        Motor motorB = new Motor(dirB, mPwmB, null);
+        //Motor motorA = new Motor(dirA, mPwmA, null);
+        //Motor motorB = new Motor(dirB, mPwmB, null);
 
 //        motorA.forward();
 //

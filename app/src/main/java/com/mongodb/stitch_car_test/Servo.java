@@ -66,7 +66,7 @@ public class Servo implements Closeable {
     }
 
     public void setup() throws InterruptedException {
-        pca9685.setup();
+        this.pca9685.setup();
     }
 
     /**
@@ -76,7 +76,7 @@ public class Servo implements Closeable {
      */
     public int angleToAnalog(final int angle){
         final int pulseWide = PCA9685.map(angle, 0, 180, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
-        final int analogValue = (int)((double) pulseWide / 1000000.0 * frequency * 4096.0);
+        final int analogValue = (int)((double) pulseWide / 1000000.0 * getFrequency() * 4096.0);
         if (DEBUG) {
             Log.d(TAG, String.format("Angle %d equals analogValue %d", angle, analogValue));
         }
@@ -151,7 +151,7 @@ public class Servo implements Closeable {
     public static void test() throws InterruptedException {
         final Servo a = new Servo(0);
         a.setup();
-//        a.write(70);
+        //a.write(70);
 
         for (int i = 0; i < 180; i += 5) {
             Log.d(TAG, Integer.toString(i));

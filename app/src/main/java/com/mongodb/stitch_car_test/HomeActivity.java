@@ -53,7 +53,7 @@ import java.util.List;
  *
  * @see <a href="https://github.com/androidthings/contrib-drivers#readme">https://github.com/androidthings/contrib-drivers#readme</a>
  */
-public class HomeActivity extends Activity {
+public class  HomeActivity extends Activity {
     private static final String TAG = "HomeActivity";
     private Gpio mButtonGpio;
     private Pwm mLEDPwm;
@@ -72,7 +72,7 @@ public class HomeActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        //setContentView(R.layout.activity_home);
 
 //        final StitchAppClient client = Stitch.initializeDefaultAppClient("stitch-rover-omwgh");
 //        final MongoClient mongoClient = client.getServiceClient(LocalMongoDbService.clientFactory);
@@ -144,9 +144,12 @@ public class HomeActivity extends Activity {
 //            e.printStackTrace();
 //        }
 
+
         try {
-//            Servo.install();
-           Servo.test();
+            //Front_Wheels.test();
+
+            //Servo.install();
+          Servo.test();
             //Pwm pwm1 = PeripheralManager.getInstance().openPwm("PWM1");
            // for (int i = 0; i < 10; i++) {
              //   pwm1.setEnabled(false);
@@ -157,10 +160,9 @@ public class HomeActivity extends Activity {
           //  }
         } catch (final InterruptedException e) {
             e.printStackTrace();
-         //   return;
-        //} catch (IOException e) {
+        } //catch (IOException e) {
           //  e.printStackTrace();
-        }
+        //}
     }
 
     private GpioCallback mCallback = new GpioCallback() {

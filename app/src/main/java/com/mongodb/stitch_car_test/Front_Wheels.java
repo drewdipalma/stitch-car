@@ -8,11 +8,12 @@ import org.bson.Document;
 
 import java.io.IOException;
 
+import static java.lang.Boolean.TRUE;
+
 public class Front_Wheels {
     //Front wheels control class
     int FRONT_WHEEL_CHANNEL = 0;
-    public String db;
-    public String busName;
+    public Integer busNumber;
     public int channel;
 
     public int minAngle;
@@ -22,23 +23,15 @@ public class Front_Wheels {
     public Document angle;
     public Servo wheel;
 
-    public int turningOffset;
+    public Integer turningOffset;
     public int cali_turning_offset;
 
-    Front_Wheels(String db, String busName, Integer channel) throws IOException {
+    Front_Wheels(Integer busNumber, Integer channel) throws InterruptedException {
 
-        // TBD if we need this
-        // db = filedb.fileDB(db=db)
-        if (db != null){
-            this.db = db;
+        if (busNumber != null){
+            this.busNumber = busNumber;
         }else{
-            this.db = "config";
-        }
-
-        if (busName != null){
-            this.busName = busName;
-        }else{
-            this.busName = "IC21";
+            this.busNumber = 1;
         }
 
         if (channel != null){
@@ -47,15 +40,16 @@ public class Front_Wheels {
             this.channel = FRONT_WHEEL_CHANNEL;
         }
 
-
         this.straightAngle = 90;
         setTurningMax(45);
 
-        this.turningOffset = 0;
-        //TBD if this is needed
-        // this.turning_offset = int(self.db.get('turning_offset', default_value=0));
+        this.wheel = new Servo(this.channel, 0, TRUE, this.busNumber, 0x40);
 
-//        Servo wheel = new Servo(channel, turningOffset, null, busName, null);
+        if(turningOffset != null){
+            setTurningOffset(turningOffset);
+        } else {
+            setTurningOffset(0);
+        }
     }
 
     public void turnLeft(){
@@ -87,12 +81,12 @@ public class Front_Wheels {
 
     public void setChannel(int chn) { this.channel = chn;}
 
-    public int getTurningMax(){return this.turningMax;}
+    public int getTurningMax(){ return this.turningMax;}
 
-    public void setTurningMax(int angle){
-        this.turningMax = angle;
-        this.minAngle = straightAngle - angle;
-        this.maxAngle = straightAngle + angle;
+    public void setTurningMax(int newAngle){
+        this.turningMax = newAngle;
+        this.minAngle = straightAngle - newAngle;
+        this.maxAngle = straightAngle + newAngle;
 
         Document angleDoc = new Document();
         angleDoc.put("left", this.minAngle);
@@ -105,8 +99,7 @@ public class Front_Wheels {
     public int getTurningOffset() { return turningOffset;}
 
     public void setTurningOffset(int value) {
-        setTurningOffset(value);
-        //self.db.set('turning_offset', value)
+        this.turningOffset = value;
         wheel.setOffset(value);
         turnStraight();
     }
@@ -144,8 +137,8 @@ public class Front_Wheels {
     }
 
 
-    public void test( int chn) throws IOException, InterruptedException {
-        Front_Wheels front_wheels = new Front_Wheels(null, null, chn);
+    public static void test() throws IOException, InterruptedException {
+        Front_Wheels front_wheels = new Front_Wheels(null, null);
 
         for( int i = 0; i < 10; i++){
             front_wheels.turnLeft();

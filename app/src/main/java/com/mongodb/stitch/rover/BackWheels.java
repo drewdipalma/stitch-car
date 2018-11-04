@@ -40,7 +40,7 @@ public class BackWheels {
 
     public Integer address = 0x40;
 
-    BackWheels(Integer busNumber, String db) throws IOException {
+    BackWheels(Integer busNumber, String db) throws IOException, InterruptedException {
         // TBD
         // self.db = filedb.fileDB(db=db)
 

@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * A PCA9685 control class for PCA9685.
  */
-public class PCA9685 implements Closeable {
+public class PCA9685 implements AutoCloseable {
     private static final String TAG = PCA9685.class.getSimpleName();
 
     private static final int MODE1 = 0x00;
@@ -159,7 +159,7 @@ public class PCA9685 implements Closeable {
 
     private static Map<Integer, I2cDevice> busToDevice = new HashMap<>();
 
-    public PCA9685(final Integer busNumber, final Integer address) {
+    public PCA9685(final Integer busNumber, final Integer address) throws InterruptedException {
         if (busNumber != null){
             this.busNumber = busNumber;
         } else {
@@ -194,9 +194,11 @@ public class PCA9685 implements Closeable {
             throw new IllegalStateException(String.format("expected to be able to open I2C device (busNumber=%x, address=%x)", this.busNumber, this.address), e);
           }
         }
+
+        setup();
     }
 
-  public PCA9685() {
+  public PCA9685() throws InterruptedException {
       this(getBusNumber(), 0x40);
   }
 
@@ -210,15 +212,14 @@ public class PCA9685 implements Closeable {
       }
 
       writeAllValue(0, 0);
-      writeByteData(MODE2, OUTDRV);
-      writeByteData(MODE1, ALLCALL);
+      writeByteData(MODE2, (byte) OUTDRV);
+      writeByteData(MODE1, (byte) ALLCALL);
       Thread.sleep(5);
 
-      int mode1 = readByteData(MODE1);
-      mode1 = mode1 & ~SLEEP;
+      byte mode1 = readByteData(MODE1);
+      mode1 = (byte) (mode1 & ~SLEEP);
       writeByteData(MODE1, mode1);
       Thread.sleep(5);
-      this.frequency = 60;
     }
 
   /**
@@ -226,13 +227,13 @@ public class PCA9685 implements Closeable {
    * @param reg
    * @param value
    */
-    public void writeByteData(final int reg, final int value) {
+    public void writeByteData(final int reg, final byte value) {
       if (debug) {
         Log.d(TAG, String.format("Writing value %x to %x", value, reg));
       }
 
       try {
-        this.bus.writeRegByte(reg, (byte) (value & 0xFF));
+        this.bus.writeRegByte(reg, value);
       } catch (IOException e) {
         e.printStackTrace();
         checkI2C();
@@ -241,17 +242,20 @@ public class PCA9685 implements Closeable {
     }
 
   public byte readByteData(final int reg) {
-    if (debug) {
-      Log.d(TAG, String.format("Reading value from %x", reg));
-    }
+    byte data = 0;
+
+    //if (debug) {
+    //  Log.d(TAG, String.format("Reading value from %x", reg));
+    //}
 
     try {
-      return this.bus.readRegByte(reg);
+       data = this.bus.readRegByte(reg);
     } catch (final IOException e) {
       e.printStackTrace();
       checkI2C();
       throw new IllegalStateException("failed to read byte");
     }
+    return data;
   }
 
   public void checkI2C() {
@@ -276,12 +280,11 @@ public class PCA9685 implements Closeable {
       if (debug) {
         Log.d(TAG, String.format("Setting frequency to %d", freq));
       }
-      this.frequency = freq;
 
-      double prescaleValue = 25000000;
-      prescaleValue /= 4096;
-      prescaleValue /= (double) freq;
-      prescaleValue -= 1;
+      float prescaleValue = 25000000.0f;
+      prescaleValue /= 4096.0;
+      prescaleValue /= (float) freq;
+      prescaleValue -= 1.0;
 
       if (debug) {
         Log.d(TAG, String.format("Setting PCA9685 frequency to %d Hz", freq));
@@ -292,13 +295,13 @@ public class PCA9685 implements Closeable {
         Log.d(TAG, String.format("Final pre-scale: %d", (int) prescale));
       }
 
-      final int oldMode = readByteData(MODE1);
-      final int newMode = (oldMode & 0x7F) | 0x10;
+      final byte oldMode = readByteData(MODE1);
+      final byte newMode = (byte) ((oldMode & 0x7F) | 0x10);
       writeByteData(MODE1, newMode);
-      writeByteData(PRESCALE, (int) Math.floor(prescale));
+      writeByteData(PRESCALE, (byte) Math.floor(prescale));
       writeByteData(MODE1, oldMode);
       Thread.sleep(5);
-      writeByteData(MODE1, oldMode | 0x80);
+      writeByteData(MODE1, (byte) (oldMode | 0x80));
     }
 
   /**
@@ -311,10 +314,10 @@ public class PCA9685 implements Closeable {
       if (debug) {
         Log.d(TAG, String.format("Set channel \"%d\" to value \"%d\"", channel, off));
       }
-      writeByteData(LED0_ON_L + 4 * channel, on & 0xFF);
-      writeByteData(LED0_ON_H + 4 * channel, on >> 8);
-      writeByteData(LED0_OFF_L + 4 * channel, off & 0xFF);
-      writeByteData(LED0_OFF_H + 4 * channel, off >> 8);
+      writeByteData(LED0_ON_L + 4 * channel, (byte) (on & 0xFF));
+      writeByteData(LED0_ON_H + 4 * channel, (byte) (on >> 8));
+      writeByteData(LED0_OFF_L + 4 * channel, (byte)(off & 0xFF));
+      writeByteData(LED0_OFF_H + 4 * channel, (byte) (off >> 8));
     }
 
   /**
@@ -326,10 +329,10 @@ public class PCA9685 implements Closeable {
       if (debug) {
         Log.d(TAG, String.format("Set all channel to value %d", off));
       }
-      writeByteData(ALL_LED_ON_L, on & 0xFF);
-      writeByteData(ALL_LED_ON_H, on >> 8);
-      writeByteData(ALL_LED_OFF_L, off & 0xFF);
-      writeByteData(ALL_LED_OFF_H, off >> 8);
+      writeByteData(ALL_LED_ON_L, (byte) (on & 0xFF));
+      writeByteData(ALL_LED_ON_H, (byte) (on >> 8));
+      writeByteData(ALL_LED_OFF_L, (byte) (off & 0xFF));
+      writeByteData(ALL_LED_OFF_H, (byte) (off >> 8));
     }
 
   /**

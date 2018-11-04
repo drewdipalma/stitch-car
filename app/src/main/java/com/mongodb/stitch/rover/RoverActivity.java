@@ -40,6 +40,7 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.types.ObjectId;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,13 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         doLogin();
 
         try {
-            Servo.test();
+            try {
+                Log.d(TAG, "Servo Test Start");
+                Servo.test();
+                Log.d(TAG, "Servo Test End");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

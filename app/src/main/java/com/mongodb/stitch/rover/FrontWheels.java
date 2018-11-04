@@ -74,19 +74,19 @@ public class FrontWheels {
 //        Servo wheel = new Servo(channel, turningOffset, null, busName, null);
     }
 
-    public void turnLeft(){
+    public void turnLeft() throws IOException {
         wheel.write(angle.getInteger("left"));
     }
 
-    public void turnStraight(){
+    public void turnStraight() throws IOException {
         wheel.write(angle.getInteger("straight"));
     }
 
-    public void turnRight(){
+    public void turnRight() throws IOException {
         wheel.write(angle.getInteger("right"));
     }
 
-    public void turn(int newAngle){
+    public void turn(int newAngle) throws IOException {
         if( newAngle < angle.getInteger("left")) {
             newAngle = angle.getInteger("left");
         }
@@ -120,33 +120,33 @@ public class FrontWheels {
 
     public int getTurningOffset() { return turningOffset;}
 
-    public void setTurningOffset(int value) {
+    public void setTurningOffset(int value) throws IOException {
         setTurningOffset(value);
         //self.db.set('turning_offset', value)
         wheel.setOffset(value);
         turnStraight();
     }
 
-    public void ready() {
+    public void ready() throws IOException {
         // Get the wheel to a ready position
         wheel.setOffset(getTurningOffset());
         turnStraight();
     }
 
-    public void calibration() {
+    public void calibration() throws IOException {
         //Get the front wheels to the calibration position.
         turnStraight();
         cali_turning_offset = getTurningOffset();
     }
 
-    public void caliLeft() {
+    public void caliLeft() throws IOException {
         //Calibrate the wheels to left
         cali_turning_offset -= 1;
         wheel.setOffset(cali_turning_offset);
         turnStraight();
     }
 
-    public void caliRight() {
+    public void caliRight() throws IOException {
         //Calibrate the wheels to right
         cali_turning_offset += 1;
         wheel.setOffset(cali_turning_offset);

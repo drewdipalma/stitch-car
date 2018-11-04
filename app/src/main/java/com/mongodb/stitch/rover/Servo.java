@@ -18,6 +18,9 @@ package com.mongodb.stitch.rover;
 
 import android.util.Log;
 
+import com.google.android.things.pio.I2cDevice;
+import com.google.android.things.pio.PeripheralManager;
+
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -27,7 +30,7 @@ import java.io.IOException;
 /**
  * Servo driver class
  */
-public class Servo implements Closeable {
+public class Servo implements Closeable{
     private static final String TAG = Servo.class.getSimpleName();
 
     private static final int MIN_PULSE_WIDTH = 600;
@@ -42,7 +45,7 @@ public class Servo implements Closeable {
     private final int channel;
     private int offset;
     private final boolean lock;
-    private final PCA9685 pca9685;
+    private PCA9685_test pca9685;
     private int frequency;
 
     /**
@@ -59,7 +62,7 @@ public class Servo implements Closeable {
         final boolean lock,
         final Integer busNumber,
         final int address
-    ) throws InterruptedException {
+    ) throws InterruptedException, IOException {
 
         // Init a servo on specific channel, this offset
         if(channel < 0 || channel > 16){
@@ -72,17 +75,19 @@ public class Servo implements Closeable {
         this.offset = offset;
         this.lock = lock;
 
-        this.pca9685 = new PCA9685(busNumber, address);
+        //final PeripheralManager manager = PeripheralManager.getInstance();
+        //device = manager.openI2cDevice("I2C1", 0x40);
+        this.pca9685 = PCA9685_test.create();
         setFrequency(FREQUENCY);
         write(90);
     }
 
-    public Servo(final int channel) throws InterruptedException {
+    public Servo(final int channel) throws InterruptedException, IOException {
         this(channel, 0, true, null, 0x40);
     }
 
-    public void setup() throws InterruptedException {
-        pca9685.setup();
+    public void setup() throws InterruptedException, IOException {
+        this.pca9685.setup();
     }
 
     /**
@@ -91,7 +96,7 @@ public class Servo implements Closeable {
      * @return
      */
     public int angleToAnalog(final int angle){
-        final int pulseWide = PCA9685.map(angle, 0, 180, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
+        final int pulseWide = (angle - 0) * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) / (180 - 0) + MIN_PULSE_WIDTH;
         final int analogValue = (int)((double) pulseWide / 1000000.0 * frequency * 4096.0);
         if (DEBUG) {
             Log.d(TAG, String.format("Angle %d equals analogValue %d", angle, analogValue));
@@ -103,9 +108,9 @@ public class Servo implements Closeable {
         return frequency;
     }
 
-    public void setFrequency(final int value) throws InterruptedException {
-        this.frequency = value;
-        this.pca9685.setFrequency(value);
+    public void setFrequency(final int value) throws InterruptedException, IOException {
+        frequency = value;
+        pca9685.setPwmFrequencyHz(value);
     }
 
     public int getOffset() {
@@ -123,7 +128,7 @@ public class Servo implements Closeable {
      * Turn the servo to a given angle
      * @param angle
      */
-    public void write(int angle) {
+    public void write(int angle) throws IOException {
         if (lock) {
             if (angle > 180) {
                 angle = 180;
@@ -137,7 +142,7 @@ public class Servo implements Closeable {
 
         int val = angleToAnalog(angle);
         val += offset;
-        pca9685.write(this.channel, 0, val);
+        pca9685.setPinPwmOnOff(0, val, this.channel);
         if (DEBUG) {
             Log.d(TAG, String.format("Turn angle = %d", angle));
         }
@@ -164,8 +169,8 @@ public class Servo implements Closeable {
      * Servo driver test on channel 1
      * @throws InterruptedException
      */
-    public static void test() throws InterruptedException {
-        final Servo a = new Servo(0);
+    public static void test() throws InterruptedException, IOException {
+        final Servo a = new Servo(1);
         a.setup();
         for (int i = 0; i < 180; i += 5) {
             Log.d(TAG, Integer.toString(i));
@@ -184,7 +189,7 @@ public class Servo implements Closeable {
         }
     }
 
-    public static void install() throws InterruptedException {
+    public static void install() throws InterruptedException, IOException {
         final Servo allServo[] = new Servo[16];
 
         for (int i = 0; i < 16; i++) {
@@ -202,6 +207,6 @@ public class Servo implements Closeable {
 
     @Override
     public void close() throws IOException {
-        this.pca9685.close();
+        pca9685.close();
     }
 }

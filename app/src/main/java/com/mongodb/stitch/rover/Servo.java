@@ -73,6 +73,7 @@ public class Servo implements Closeable {
         this.lock = lock;
 
         this.pca9685 = new PCA9685(busNumber, address);
+        this.setup();
         setFrequency(FREQUENCY);
         write(90);
     }
@@ -166,7 +167,6 @@ public class Servo implements Closeable {
      */
     public static void test() throws InterruptedException {
         final Servo a = new Servo(0);
-        a.setup();
         for (int i = 0; i < 180; i += 5) {
             Log.d(TAG, Integer.toString(i));
             a.write(i);

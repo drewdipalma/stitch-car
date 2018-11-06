@@ -18,16 +18,14 @@ package com.mongodb.stitch.rover;
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
-import org.bson.BsonObjectId;
-import org.bson.BsonReader;
 import org.bson.BsonString;
+import org.bson.BsonReader;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,12 +37,12 @@ class Rover {
   public static final String ROVERS_COLLECTION = "rovers";
 
   private final String id;
-  private final ObjectId lastMoveCompleted;
+  private final String lastMoveCompleted;
   private final List<Move> moves;
 
   Rover(
       final String id,
-      final ObjectId lastMoveCompleted,
+      final String lastMoveCompleted,
       final List<Move> moves
   ) {
     this.id = id;
@@ -64,7 +62,7 @@ class Rover {
     return id;
   }
 
-  public ObjectId getLastMoveCompleted() {
+  public String getLastMoveCompleted() {
     return lastMoveCompleted;
   }
 
@@ -76,7 +74,7 @@ class Rover {
     final BsonDocument asDoc = new BsonDocument();
     asDoc.put(Fields.ID, new BsonString(rover.getId()));
     if (rover.getLastMoveCompleted() != null) {
-      asDoc.put(Fields.LAST_MOVE_COMPLETED, new BsonObjectId(rover.getLastMoveCompleted()));
+      asDoc.put(Fields.LAST_MOVE_COMPLETED, new BsonString(rover.getLastMoveCompleted()));
     }
     final BsonArray movesArr = new BsonArray();
     for (final Move move : rover.getMoves()) {
@@ -87,9 +85,9 @@ class Rover {
   }
 
   static Rover fromBsonDocument(final BsonDocument doc) {
-    final ObjectId lastMoveCompleted;
+    final String lastMoveCompleted;
     if (doc.containsKey(Fields.LAST_MOVE_COMPLETED)) {
-      lastMoveCompleted = doc.getObjectId(Fields.LAST_MOVE_COMPLETED).getValue();
+      lastMoveCompleted = doc.getString(Fields.LAST_MOVE_COMPLETED).getValue();
     } else {
       lastMoveCompleted = null;
     }

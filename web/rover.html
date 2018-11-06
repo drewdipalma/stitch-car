@@ -1,0 +1,87 @@
+<html>
+<head>
+  <script src="https://s3.amazonaws.com/stitch-sdks/js/bundles/4.0.15-0/stitch.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://s3.amazonaws.com/stitch-sdks/bson/bson.bundle.js"></script>
+</head>
+<body onload="load()">
+  <h1>Rover</h1>
+  <h2>Select a Rover</h2>
+  <ul id="rover_list"></ul>
+  <h2 id="rover" style="display: none;"></h2>
+  <h3 id="rover_add_header" style="display: none;">Add a move</h3>
+  <input style="display: none;" id="angle" placeholder="Angle [0,180]" />
+  <input style="display: none;" id="speed" placeholder="Speed [-3,3]" />
+  <button style="display: none;" id="submit">Submit</button>
+  <h3 id="rover_moves_header" style="display: none;">Moves</h3>
+  <ul id="rover_moves"></ul>
+</body>
+<script>
+  function load() {
+    const client = stitch.Stitch.initializeDefaultAppClient('stitch-rover-gfhpg');
+    login();
+  }
+
+  function login() {
+    const client = stitch.Stitch.defaultAppClient;
+    client.auth.loginWithCredential(new stitch.AnonymousCredential())
+      .then(loadRovers)
+      .catch(err => console.log("failed to log in", err));
+  }
+
+  function loadRovers() {
+    const client = stitch.Stitch.defaultAppClient;
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
+    coll.find({}).asArray().then(rovers => {
+      let roverItems = [];
+      for (let rover of rovers) {
+        let item = $(`<li>${rover._id} <button>Select</button></li>`);
+        item.click(() => selectRover(rover._id));
+        roverItems.push(item);
+      }
+      $("#rover_list").empty().append(roverItems)
+    });
+  }
+
+  function selectRover(roverId) {
+    const client = stitch.Stitch.defaultAppClient;
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
+
+    coll.watch([roverId])
+      .then(stream => {
+        $("#rover").show().text(`Rover ${roverId}`);
+        $("#rover_add_header").show();
+        $("#rover_moves_header").show();
+        $("#angle").show();
+        $("#speed").show();
+        $("#submit").show().click(() => pushMoveToRover(roverId));
+        stream.onNext(event => displayRover(event.fullDocument));
+        coll.find({"_id": roverId}).first()
+          .then(rover => displayRover(rover))
+          .catch(err => console.log("error fetching rover", err));
+      });
+  }
+
+  function pushMoveToRover(roverId) {
+    const client = stitch.Stitch.defaultAppClient;
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
+
+    const angle = parseInt($("#angle").val());
+    const speed = parseInt($("#speed").val());
+    if (isNaN(angle) || isNaN(speed)) {
+      return;
+    }
+    const move = {"_id": new BSON.ObjectID().toHexString(), angle, speed};
+    coll.updateOne({"_id": roverId}, {"$push": { "moves": move }, "$unset": {"__stitch_sync_version": 1}});
+  }
+
+  function displayRover(rover) {
+    let moves = [];
+    for (let move of rover.moves) {
+      let item = $(`<li>Angle: ${move.angle}; Speed: ${move.speed}</li>`);
+      moves.push(item);
+    }
+    $("#rover_moves").empty().append(moves);
+  }
+</script>
+</html>

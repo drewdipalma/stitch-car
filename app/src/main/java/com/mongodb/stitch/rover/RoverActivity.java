@@ -68,12 +68,6 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
         doLogin();
-
-        try {
-            Servo.test();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void doLogin() {
@@ -135,6 +129,11 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     private void doMove(final Move move) {
         Log.i(TAG, "Doing move " + move);
         Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -152,7 +151,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         // move completed is always present in the remote. Therefore we should trim all moves up to
         // and including the last completed move.
         final Rover localRover = localEvent.getFullDocument();
-        final ObjectId lastMoveCompleted = localRover.getLastMoveCompleted();
+        final String lastMoveCompleted = localRover.getLastMoveCompleted();
         final Rover remoteRover = remoteEvent.getFullDocument();
         final List<Move> nextMoves = new ArrayList<>(remoteRover.getMoves().size());
         boolean caughtUp = false;

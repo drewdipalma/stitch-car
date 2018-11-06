@@ -18,28 +18,27 @@ package com.mongodb.stitch.rover;
 
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
-import org.bson.BsonObjectId;
+import org.bson.BsonString;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
-import org.bson.types.ObjectId;
 
 class Move {
 
-  private final ObjectId id;
+  private final String id;
   private final int angle;
   private final int speed;
 
-  Move(final ObjectId id, final int angle, final int speed) {
+  Move(final String id, final int angle, final int speed) {
     this.id = id;
     this.angle = angle;
     this.speed = speed;
   }
 
-  public ObjectId getId() {
+  public String getId() {
     return id;
   }
 
@@ -53,7 +52,7 @@ class Move {
 
   static BsonDocument toBsonDocument(final Move rover) {
     final BsonDocument asDoc = new BsonDocument();
-    asDoc.put(Fields.ID, new BsonObjectId(rover.getId()));
+    asDoc.put(Fields.ID, new BsonString(rover.getId()));
     asDoc.put(Fields.ANGLE, new BsonInt32(rover.getAngle()));
     asDoc.put(Fields.SPEED, new BsonInt32(rover.getSpeed()));
     return asDoc;
@@ -61,7 +60,7 @@ class Move {
 
   static Move fromBsonDocument(final BsonDocument doc) {
     return new Move(
-        doc.getObjectId(Fields.ID).getValue(),
+        doc.getString(Fields.ID).getValue(),
         doc.getNumber(Fields.ANGLE).intValue(),
         doc.getNumber(Fields.SPEED).intValue()
     );

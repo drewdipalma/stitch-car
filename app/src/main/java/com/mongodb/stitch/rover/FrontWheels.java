@@ -22,9 +22,10 @@ package com.mongodb.stitch.rover;
 
 import org.bson.Document;
 
+import java.io.Closeable;
 import java.io.IOException;
 
-public class FrontWheels {
+public class FrontWheels implements Closeable {
     //Front wheels control class
     int FRONT_WHEEL_CHANNEL = 0;
     public String db;
@@ -41,10 +42,8 @@ public class FrontWheels {
     public int turningOffset;
     public int cali_turning_offset;
 
-    FrontWheels(String db, String busName, Integer channel) throws IOException {
+    FrontWheels(String db, String busName, Integer channel) throws IOException, InterruptedException {
 
-        // TBD if we need this
-        // db = filedb.fileDB(db=db)
         if (db != null){
             this.db = db;
         }else{
@@ -71,7 +70,7 @@ public class FrontWheels {
         //TBD if this is needed
         // this.turning_offset = int(self.db.get('turning_offset', default_value=0));
 
-//        Servo wheel = new Servo(channel, turningOffset, null, busName, null);
+        wheel = new Servo(channel);
     }
 
     public void turnLeft(){
@@ -159,11 +158,16 @@ public class FrontWheels {
         //self.db.set('turning_offset', self.turning_offset)
     }
 
+    @Override
+    public void close() throws IOException {
+        wheel.close();
+    }
 
-    public void test( int chn) throws IOException, InterruptedException {
+
+    public static void test(int chn) throws IOException, InterruptedException {
         FrontWheels front_wheels = new FrontWheels(null, null, chn);
 
-        for( int i = 0; i < 10; i++){
+        for( int i = 0; i < 3; i++){
             front_wheels.turnLeft();
             Thread.sleep(1000);
 
@@ -176,5 +180,7 @@ public class FrontWheels {
             front_wheels.turnStraight();
             Thread.sleep(1000);
         }
+
+        front_wheels.close();
     }
 }

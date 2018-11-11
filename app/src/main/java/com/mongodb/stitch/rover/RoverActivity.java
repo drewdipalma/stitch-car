@@ -22,6 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 // Base Stitch Packages
+import com.google.android.things.pio.PeripheralManager;
 import com.mongodb.stitch.android.core.Stitch;
 import com.mongodb.stitch.android.core.StitchAppClient;
 import com.mongodb.stitch.core.auth.providers.serverapikey.ServerApiKeyCredential;
@@ -40,6 +41,7 @@ import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.types.ObjectId;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +70,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
         doLogin();
+        
     }
 
     private void doLogin() {

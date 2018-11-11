@@ -21,6 +21,7 @@ package com.mongodb.stitch.rover;
 
 import java.io.IOException;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 public class BackWheels {
@@ -30,50 +31,123 @@ public class BackWheels {
     public int PWMA = 4;
     public int PWMB = 5;
 
-    public Boolean forwardA;
-    public Boolean forwardB;
+    public PCA9685 motorPwmA;
+    public PCA9685 motorPwmB;
 
-    public PCA9685 pwm;
+    public Motor leftwheel;
+    public Motor rightwheel;
 
-    public Integer busNumber = 1;
-    public String db;
+    public Boolean caliForwardA;
+    public Boolean caliForwardB;
 
-    public Integer address = 0x40;
+    public int speed;
 
-    BackWheels(Integer busNumber, String db) throws IOException {
-        // TBD
-        // self.db = filedb.fileDB(db=db)
-
+    BackWheels() throws IOException, InterruptedException {
         // Initialize the direction channel and pwm channel
-        //Original: self.forward_B = int(self.db.get('forward_B', default_value=1))
-        forwardA = TRUE;
-        forwardB = TRUE;
 
-        Motor leftWheel = new Motor(MotorA, null, forwardA);
-        Motor rightWheel = new Motor(MotorB, null, forwardB);
+        this.motorPwmA = new PCA9685();
+        this.motorPwmB = new PCA9685();
 
-        pwm = new PCA9685(busNumber, address);
-
-        //setPwmValue(PWMA, 0, pwm);
-
-        //self.pwm.write(self.PWM_A, 0, pulse_wide);
-
-        //def _set_b_pwm(value):
-        //pulse_wide = self.pwm.map(value, 0, 100, 0, 4095)
-        //self.pwm.write(self.PWM_B, 0, pulse_wide)
-
-       // leftWheel.setPwm(aPwm);
-       // rightWheel.setPwm(bPwm);
+        this.leftwheel = new Motor(MotorA, PWMA, motorPwmA, FALSE);
+        this.rightwheel = new Motor(MotorB,PWMB, motorPwmB, FALSE);
 
         setSpeed(0);
     }
 
-   // public void setPwmValue( int pwmNum, int value, PWM pwm){
-   //     int pulse_wide = pwm.map(value, 0, 100, 0, 4095);
-   //     pwm.write(pwmNum, 0, pulse_wide);
-   // }
+    public void forward() throws IOException, InterruptedException {
+        leftwheel.forward();
+        rightwheel.forward();
+    }
 
-    public void setSpeed(int speed){
+    public void backward() throws IOException, InterruptedException {
+        leftwheel.backward();
+        rightwheel.backward();
+    }
+
+    public void stop() throws IOException, InterruptedException {
+        leftwheel.stop();
+        rightwheel.stop();
+    }
+
+    public int getSpeed(){return speed;}
+
+    public void setSpeed(int speed) throws IOException, InterruptedException {
+        this.speed = speed;
+        leftwheel.setSpeed(speed);
+        rightwheel.setSpeed(speed);
+    }
+
+    public void ready() throws IOException, InterruptedException {
+        leftwheel.setOffset(TRUE);
+        rightwheel.setOffset(TRUE);
+        stop();
+    }
+
+    public void calibration() throws IOException, InterruptedException {
+        // Get the front wheels to the calibration position.
+
+        setSpeed(50);
+        forward();
+        this.caliForwardA = TRUE;
+        this.caliForwardB = TRUE;
+    }
+
+    public void caliLeft() throws IOException, InterruptedException {
+        // Reverse the left wheels forward direction in calibration
+
+        caliForwardA = TRUE;
+        leftwheel.setOffset(caliForwardA);
+        forward();
+    }
+
+
+    public void caliRight() throws IOException, InterruptedException {
+        // Reverse the left wheels forward direction in calibration
+
+        caliForwardA = TRUE;
+        leftwheel.setOffset(caliForwardA);
+        forward();
+    }
+
+    public static void test() throws IOException, InterruptedException {
+        BackWheels backWheels = new BackWheels();
+        long DELAY = 10;
+        int i;
+
+        try {
+            backWheels.forward();
+
+            for(i = 0; i < 100; i++){
+                backWheels.setSpeed(i);
+                Thread.sleep(DELAY);
+            }
+
+            for(i = 100; i > 0; i--){
+                backWheels.setSpeed(i);
+                Thread.sleep(DELAY);
+            }
+
+            backWheels.backward();
+
+            for(i = 0; i < 100; i++){
+                backWheels.setSpeed(i);
+                Thread.sleep(DELAY);
+            }
+
+            for(i = 100; i > 0; i--){
+                backWheels.setSpeed(i);
+                Thread.sleep(DELAY);
+            }
+
+            backWheels.stop();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 }

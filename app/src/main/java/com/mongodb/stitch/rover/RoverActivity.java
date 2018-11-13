@@ -55,6 +55,14 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        try {
+            UltrasonicAvoidance.test();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         final StitchAppClient client = Stitch.getDefaultAppClient();
         final RemoteMongoClient mongoClient =
             client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");

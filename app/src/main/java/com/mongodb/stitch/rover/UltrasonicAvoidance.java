@@ -29,7 +29,7 @@ public class UltrasonicAvoidance {
     public int distance() throws IOException, InterruptedException {
         long pulse_end = 0;
         long pulse_start = 0;
-
+        Log.d("Dist Test","Within True");
         mGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
         Thread.sleep(10);
         mGpio.setActiveType(Gpio.ACTIVE_HIGH);
@@ -50,6 +50,10 @@ public class UltrasonicAvoidance {
             pulse_end =  System.currentTimeMillis();
             if(pulse_start - start > timeout){
                 return -1;
+            }
+            // Added to prevent infinte loop
+            if(pulse_end - start > 2*timeout){
+                break;
             }
         }
 
@@ -101,11 +105,12 @@ public class UltrasonicAvoidance {
             int status = UA.lessThan(threshold);
 
             if (distance != -1) {
-                Log.d(TAG, String.format("Distance %x and Statuc %x", distance, status));
+                Log.d(TAG, String.format("Distance %x and Status %x", distance, status));
             } else {
+                Log.d(TAG,"Distance N/A");
             }
 
-            Thread.sleep(1);
+            Thread.sleep(1000);
         }
     }
 

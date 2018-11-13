@@ -16,7 +16,7 @@
 
 package com.mongodb.stitch.rover;
 
-// Translation of Front Wheels class (back_wheels.py)
+// Translation of Back Wheels class (back_wheels.py)
 // https://github.com/sunfounder/SunFounder_PiCar/blob/master/picar/back_wheels.py
 
 import java.io.IOException;

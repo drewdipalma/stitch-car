@@ -42,7 +42,7 @@ public class FrontWheels implements Closeable {
     public int turningOffset;
     public int cali_turning_offset;
 
-    FrontWheels(String db, String busName, Integer channel) throws IOException, InterruptedException {
+    FrontWheels(String db, String busName, Integer channel) throws InterruptedException {
 
         if (db != null){
             this.db = db;

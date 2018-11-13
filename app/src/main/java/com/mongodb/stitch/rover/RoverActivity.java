@@ -70,7 +70,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
         doLogin();
-        
+
     }
 
     private void doLogin() {

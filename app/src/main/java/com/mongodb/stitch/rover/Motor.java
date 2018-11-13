@@ -25,7 +25,7 @@ import java.io.IOException;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-//
+// Translation of TB6612 class (TB6612.py)
 // https://github.com/sunfounder/SunFounder_PiCar/blob/master/picar/SunFounder_TB6612/TB6612.py
 public class Motor {
     /*   Motor driver class

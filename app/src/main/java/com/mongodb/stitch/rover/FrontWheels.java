@@ -27,10 +27,9 @@ import java.io.IOException;
 
 public class FrontWheels implements Closeable {
     //Front wheels control class
-    int FRONT_WHEEL_CHANNEL = 0;
-    public String db;
+    Integer FRONT_WHEEL_CHANNEL = 0;
     public String busName;
-    public int channel;
+    public Integer channel;
 
     public int minAngle;
     public int maxAngle;
@@ -42,18 +41,11 @@ public class FrontWheels implements Closeable {
     public int turningOffset;
     public int cali_turning_offset;
 
-    FrontWheels(String db, String busName, Integer channel) throws InterruptedException {
-
-        if (db != null){
-            this.db = db;
-        }else{
-            this.db = "config";
-        }
-
+    FrontWheels(String busName, Integer channel) throws InterruptedException {
         if (busName != null){
             this.busName = busName;
         }else{
-            this.busName = "IC21";
+            this.busName = "I2C1";
         }
 
         if (channel != null){
@@ -67,8 +59,6 @@ public class FrontWheels implements Closeable {
         setTurningMax(45);
 
         this.turningOffset = 0;
-        //TBD if this is needed
-        // this.turning_offset = int(self.db.get('turning_offset', default_value=0));
 
         wheel = new Servo(channel);
     }
@@ -165,7 +155,7 @@ public class FrontWheels implements Closeable {
 
 
     public static void test(int chn) throws IOException, InterruptedException {
-        FrontWheels front_wheels = new FrontWheels(null, null, chn);
+        FrontWheels front_wheels = new FrontWheels(null, chn);
 
         for( int i = 0; i < 3; i++){
             front_wheels.turnLeft();

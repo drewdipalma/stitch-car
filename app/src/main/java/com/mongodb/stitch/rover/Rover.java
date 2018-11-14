@@ -40,6 +40,8 @@ class Rover {
   private final String lastMoveCompleted;
   private final List<Move> moves;
 
+
+
   Rover(
       final String id,
       final String lastMoveCompleted,

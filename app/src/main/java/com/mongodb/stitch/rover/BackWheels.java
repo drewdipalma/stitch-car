@@ -19,12 +19,13 @@ package com.mongodb.stitch.rover;
 // Translation of Back Wheels class (back_wheels.py)
 // https://github.com/sunfounder/SunFounder_PiCar/blob/master/picar/back_wheels.py
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-public class BackWheels {
+public class BackWheels implements Closeable{
     public String MotorA = "BCM17";
     public String MotorB = "BCM27";
 
@@ -107,6 +108,12 @@ public class BackWheels {
         caliForwardA = TRUE;
         leftwheel.setOffset(caliForwardA);
         forward();
+    }
+
+    @Override
+    public void close() throws IOException {
+        leftwheel.close();
+        rightwheel.close();
     }
 
     public static void test() throws IOException, InterruptedException {

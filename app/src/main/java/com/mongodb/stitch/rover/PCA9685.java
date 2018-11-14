@@ -235,7 +235,7 @@ public class PCA9685 implements Closeable {
         this.bus.writeRegByte(reg, (byte) (value & 0xFF));
       } catch (IOException e) {
         e.printStackTrace();
-        checkI2C();
+        //checkI2C();
         throw new IllegalStateException("failed to write byte");
       }
     }

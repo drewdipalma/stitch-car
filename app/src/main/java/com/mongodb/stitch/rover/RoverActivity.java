@@ -51,17 +51,12 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     private RemoteMongoCollection<Rover> rovers;
     private String userId;
 
+    public FrontWheels frontWheels;
+    public BackWheels backWheels;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        try {
-            UltrasonicAvoidance.test();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         final StitchAppClient client = Stitch.getDefaultAppClient();
         final RemoteMongoClient mongoClient =
@@ -77,8 +72,17 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             null,
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
-        doLogin();
+        try {
+            //this.frontWheels = new FrontWheels("I2C1", 0);
+            BackWheels.test();
+            this.backWheels = new BackWheels();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        doLogin();
     }
 
     private void doLogin() {
@@ -141,8 +145,12 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         Log.i(TAG, "Doing move " + move);
         Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
         try {
-            Thread.sleep(2000);
+            //frontWheels.turn(move.getAngle());
+            backWheels.setSpeed(move.getSpeed());
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

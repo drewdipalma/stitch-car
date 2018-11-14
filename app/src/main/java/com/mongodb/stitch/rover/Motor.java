@@ -20,6 +20,7 @@ import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManager;
 import com.google.android.things.pio.Pwm;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import static java.lang.Boolean.FALSE;
@@ -27,7 +28,7 @@ import static java.lang.Boolean.TRUE;
 
 // Translation of TB6612 class (TB6612.py)
 // https://github.com/sunfounder/SunFounder_PiCar/blob/master/picar/SunFounder_TB6612/TB6612.py
-public class Motor {
+public class Motor implements Closeable {
     /*   Motor driver class
     Set direction_channel to the GPIO channel which connect to MA,
     Set motor_B to the GPIO channel which connect to MB,
@@ -118,6 +119,11 @@ public class Motor {
     public void setPwmValue(int value){
         int pulse_wide = this.pwm.map(value, 0, 100, 0, 4095);
         pwm.write(pwmChannel, 0, pulse_wide);
+    }
+
+    @Override
+    public void close() throws IOException {
+        pwm.close();
     }
 
     //Should this be a separate class like 'MotorTest'?

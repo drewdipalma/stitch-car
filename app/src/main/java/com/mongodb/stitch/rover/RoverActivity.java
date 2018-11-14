@@ -75,7 +75,8 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         try {
             //this.frontWheels = new FrontWheels("I2C1", 0);
             BackWheels.test();
-            this.backWheels = new BackWheels();
+            Servo.test();
+//            this.backWheels = new BackWheels();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

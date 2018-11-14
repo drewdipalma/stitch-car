@@ -183,13 +183,13 @@ public class PCA9685 implements Closeable {
         } else {
             this.address = 0x40;
         }
-        if (busToDevice.containsKey(busNumber)) {
-          this.bus = busToDevice.get(busNumber);
+        if (busToDevice.containsKey(this.busNumber)) {
+          this.bus = busToDevice.get(this.busNumber);
         } else {
           final PeripheralManager manager = PeripheralManager.getInstance();
           try{
             this.bus = manager.openI2cDevice(busName, this.address);
-            busToDevice.put(busNumber, bus);
+            busToDevice.put(this.busNumber, bus);
           } catch (IOException e) {
             throw new IllegalStateException(String.format("expected to be able to open I2C device (busNumber=%x, address=%x)", this.busNumber, this.address), e);
           }

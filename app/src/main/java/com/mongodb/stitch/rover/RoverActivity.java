@@ -54,6 +54,8 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     public FrontWheels frontWheels;
     public BackWheels backWheels;
 
+    public Sensor TempSensor;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -71,6 +73,24 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             this,
             null,
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
+
+        try {
+            this.TempSensor = new Sensor(12);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < 20; i ++){
+            try {
+                Log.d(TAG,"The temperature is " + TempSensor.getI2CReading());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         try {
             this.frontWheels = new FrontWheels("I2C1", 0);

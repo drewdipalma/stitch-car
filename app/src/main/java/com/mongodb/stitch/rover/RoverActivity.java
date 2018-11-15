@@ -73,10 +73,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
         try {
-            //this.frontWheels = new FrontWheels("I2C1", 0);
+            this.frontWheels = new FrontWheels("I2C1", 0);
+            this.backWheels = new BackWheels();
             BackWheels.test();
-            Servo.test();
-//            this.backWheels = new BackWheels();
+            FrontWheels.test(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -123,6 +123,17 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             if (rover == null) {
                 try {
                     Thread.sleep(1000);
+
+                    try {
+                        if(backWheels.getSpeed() == 0){
+                            backWheels.stop();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -145,10 +156,25 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     private void doMove(final Move move) {
         Log.i(TAG, "Doing move " + move);
         Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
+        int speed = move.getSpeed();
+        int DELAY = 10;
+        int MOVE_LENGTH = 3000;
+
         try {
-            //frontWheels.turn(move.getAngle());
-            backWheels.setSpeed(move.getSpeed());
-            Thread.sleep(1000);
+            frontWheels.turn(move.getAngle());
+
+            if(speed > 1){
+                backWheels.forward();
+            } else {
+                backWheels.backward();
+            }
+
+            for(int i = backWheels.getSpeed(); i < 8*Math.abs(speed); i++){
+                backWheels.setSpeed(i);
+                Thread.sleep(DELAY);
+            }
+
+            Thread.sleep(MOVE_LENGTH);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {

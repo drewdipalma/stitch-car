@@ -88,14 +88,14 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for(int i = 0; i < 20; i ++){
+        for(int i = 0; i < 10; i ++){
             try {
                 Log.d(TAG,"The temperature is " + java.util.Arrays.toString(TempSensor.getI2CReading()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -143,7 +143,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
                     Thread.sleep(1000);
 
                     try {
-                        if(backWheels.getSpeed() == 0){
+                        if(backWheels.getSpeed() != 0){
                             backWheels.stop();
                         }
                     } catch (IOException e) {

@@ -54,7 +54,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     public FrontWheels frontWheels;
     public BackWheels backWheels;
 
-    public Sensor TempSensor;
+    public BMP085 TempSensor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,18 +84,21 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         }
 
         try {
-            this.TempSensor = new Sensor(8);
-        } catch (InterruptedException e) {
+            this.TempSensor = new BMP085(null, null);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        for(int i = 0; i < 10; i ++){
+
+        for(int i = 0; i < 20; i ++){
             try {
-                Log.d(TAG,"The temperature is " + java.util.Arrays.toString(TempSensor.getI2CReading()));
+                TempSensor.readTemp();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

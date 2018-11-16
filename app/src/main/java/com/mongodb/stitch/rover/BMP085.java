@@ -57,12 +57,12 @@ public class BMP085 {
 
     public BMP085(Integer mode, Integer address) throws IOException {
         //Check to see if the mode is valid
-        if(mode < 0 || mode > 3){
-            throw new IllegalArgumentException(String.format("Unexpected mode value \"%d\".", mode));
-        }
-
         if(mode != null){
             this.mode = mode;
+        }
+
+        if(this.mode < 0 || this.mode > 3){
+            throw new IllegalArgumentException(String.format("Unexpected mode value \"%d\".", this.mode));
         }
 
         if(address != null){
@@ -87,17 +87,29 @@ public class BMP085 {
         // This originally uses readS16BE (https://github.com/adafruit/Adafruit_Python_GPIO/blob/master/Adafruit_GPIO/I2C.py)
         // Read a signed 16-bit value from the specified register, in big endian byte order.
         // Default calibration values
-        // cal_AC1 = 408
-        // cal_AC2 = -72
-        // cal_AC3 = -14383
-        // cal_AC4 = 32741
-        // cal_AC5 = 32757
-        // cal_AC6 = 23153
-        // cal_B1 = 6190
-        // cal_B2 = 4
-        // cal_MB = -32767
-        // cal_MC = -8711
-        // cal_MD = 2868
+        // this.cal_AC1 = 408;
+        // this.cal_AC2 = -72;
+        // this.cal_AC3 = -14383;
+        // this.cal_AC4 = 32741;
+        // this.cal_AC5 = 32757;
+        // this.cal_AC6 = 23153;
+        // this.cal_B1 = 6190;
+        // this.cal_B2 = 4;
+        // this.cal_MB = -32767;
+        // this.cal_MC = -8711;
+        // this.cal_MD = 2868;
+        // Our values when read
+        // AC1 = "0"
+        // AC2 = "13056"
+        // AC3 = "-64"
+        // AC4 = "85"
+        // AC5 = "0"
+        // AC6 = "0"
+        // B1 = "24578"
+        // B2 = "1"
+        // MB = "65324".
+        // MC = "4960"
+        // MD = "768"
 
         this.cal_AC1 = readBE(BMP085_CAL_AC1);
         this.cal_AC2 = readBE(BMP085_CAL_AC2);
@@ -124,12 +136,20 @@ public class BMP085 {
         Log.d(TAG, String.format("MD = \"%d\".", cal_MD));
     }
 
-    public int read_raw_temp() throws IOException, InterruptedException {
+    public double readTemp() throws IOException, InterruptedException {
         //Reads the raw (uncompensated) temperature from the sensor.
         device.writeRegByte(BMP085_CONTROL, (byte) BMP085_READTEMPCMD);
         Thread.sleep(5);
         int raw = readBE(BMP085_TEMPDATA);
+        int X1 = ((raw - this.cal_AC6) * this.cal_AC5) >> 15;
+        int X2 = (this.cal_MC << 11);
+        int B5 = X1 + X2;
+        double temp = ((B5 + 8) >> 4) / 10.0;
+
         Log.d(TAG, String.format("Raw Temp = \"%d\".", raw));
-        return raw;
+        Log.d(TAG, String.format("Calibrated Temp (C) = \"%.02f\".", temp));
+        Log.d(TAG, String.format("Calibrated Temp (F) = \"%.02f\".", temp*9/5+32));
+
+        return temp;
     }
 }

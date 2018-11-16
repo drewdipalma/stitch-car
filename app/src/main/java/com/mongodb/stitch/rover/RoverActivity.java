@@ -75,13 +75,22 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
         try {
-            this.TempSensor = new Sensor(12);
+            this.frontWheels = new FrontWheels("I2C1", 0);
+            this.backWheels = new BackWheels();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            this.TempSensor = new Sensor(8);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         for(int i = 0; i < 20; i ++){
             try {
-                Log.d(TAG,"The temperature is " + TempSensor.getI2CReading());
+                Log.d(TAG,"The temperature is " + java.util.Arrays.toString(TempSensor.getI2CReading()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -90,17 +99,6 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-
-        try {
-            this.frontWheels = new FrontWheels("I2C1", 0);
-            this.backWheels = new BackWheels();
-            BackWheels.test();
-            FrontWheels.test(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         doLogin();

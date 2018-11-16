@@ -18,20 +18,20 @@
 </body>
 <script>
   function load() {
-    const client = stitch.Stitch.initializeDefaultAppClient('stitch-rover-gfhpg');
+    const client = stitch.Stitch.initializeDefaultAppClient('mongodb-rover-elouh');
     login();
   }
 
   function login() {
     const client = stitch.Stitch.defaultAppClient;
-    client.auth.loginWithCredential(new stitch.AnonymousCredential())
+    client.auth.loginWithCredential(new stitch.UserPasswordCredential("drew.dipalma@gmail.com", "Password"))
       .then(loadRovers)
       .catch(err => console.log("failed to log in", err));
   }
 
   function loadRovers() {
     const client = stitch.Stitch.defaultAppClient;
-    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('Rover').collection('Moves');
     coll.find({}).asArray().then(rovers => {
       let roverItems = [];
       for (let rover of rovers) {
@@ -45,7 +45,7 @@
 
   function selectRover(roverId) {
     const client = stitch.Stitch.defaultAppClient;
-    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('Rover').collection('Moves');
 
     coll.watch([roverId])
       .then(stream => {
@@ -64,7 +64,7 @@
 
   function pushMoveToRover(roverId) {
     const client = stitch.Stitch.defaultAppClient;
-    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('Rover').collection('Moves');
 
     const angle = parseInt($("#angle").val());
     const speed = parseInt($("#speed").val());

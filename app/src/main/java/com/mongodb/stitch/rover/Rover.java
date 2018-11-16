@@ -33,8 +33,9 @@ import java.util.List;
 
 class Rover {
 
-  public static final String ROVERS_DATABASE = "rover";
-  public static final String ROVERS_COLLECTION = "rovers";
+  public static final String ROVERS_DATABASE = "Rover";
+  public static final String ROVERS_COLLECTION = "Moves";
+  public static final String SENSORS_COLLECTION = "Sensors";
 
   private final String id;
   private final String lastMoveCompleted;

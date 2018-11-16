@@ -11,6 +11,9 @@ public class Sensor implements Closeable {
     private final PCA9685 pca9685;
 
     private static final int LED0_ON_L = 0x06;
+    private static final int LED0_ON_H = 0x07;
+    private static final int LED0_OFF_L = 0x08;
+    private static final int LED0_OFF_H = 0x09;
 
     /**
      * Init a sensor on specific channel
@@ -29,8 +32,13 @@ public class Sensor implements Closeable {
         this.pca9685 = new PCA9685();
     }
 
-    public int getI2CReading() throws IOException {
-        return (int) this.pca9685.readByteData(LED0_ON_L + 4 * channel);
+    public byte[] getI2CReading() throws IOException {
+        byte[] readArray = new byte[]{pca9685.readByteData(LED0_ON_L + 4 * channel),
+        pca9685.readByteData(LED0_ON_H + 4 * channel),
+        pca9685.readByteData(LED0_OFF_L + 4 * channel),
+        pca9685.readByteData(LED0_OFF_H + 4 * channel)};
+
+        return readArray;
     }
 
     @Override

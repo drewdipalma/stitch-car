@@ -74,6 +74,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
 
   /**
    * Shell script to simulate network failure:
+   * adb shell
    * su
    * while true
    * do

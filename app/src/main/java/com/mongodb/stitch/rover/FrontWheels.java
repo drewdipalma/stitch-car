@@ -26,151 +26,159 @@ import java.io.Closeable;
 import java.io.IOException;
 
 public class FrontWheels implements Closeable {
-    //Front wheels control class
-    Integer FRONT_WHEEL_CHANNEL = 0;
-    public String busName;
-    public Integer channel;
+  //Front wheels control class
+  Integer FRONT_WHEEL_CHANNEL = 0;
+  public String busName;
+  public Integer channel;
 
-    public int minAngle;
-    public int maxAngle;
-    public int straightAngle;
-    public int turningMax;
-    public Document angle;
-    public Servo wheel;
+  public int minAngle;
+  public int maxAngle;
+  public int straightAngle;
+  public int turningMax;
+  public Document angle;
+  public Servo wheel;
 
-    public int turningOffset;
-    public int cali_turning_offset;
+  public int turningOffset;
+  public int cali_turning_offset;
 
-    FrontWheels(String busName, Integer channel) throws InterruptedException {
-        if (busName != null){
-            this.busName = busName;
-        }else{
-            this.busName = "I2C1";
-        }
-
-        if (channel != null){
-            this.channel = channel;
-        }else{
-            this.channel = FRONT_WHEEL_CHANNEL;
-        }
-
-
-        this.straightAngle = 90;
-        setTurningMax(45);
-
-        this.turningOffset = 0;
-
-        wheel = new Servo(channel);
+  FrontWheels(String busName, Integer channel) throws InterruptedException {
+    if (busName != null) {
+      this.busName = busName;
+    } else {
+      this.busName = "I2C1";
     }
 
-    public void turnLeft(){
-        wheel.write(angle.getInteger("left"));
-    }
-
-    public void turnStraight(){
-        wheel.write(angle.getInteger("straight"));
-    }
-
-    public void turnRight(){
-        wheel.write(angle.getInteger("right"));
-    }
-
-    public void turn(int newAngle){
-        if( newAngle < angle.getInteger("left")) {
-            newAngle = angle.getInteger("left");
-        }
-
-        if( newAngle > angle.getInteger("right")) {
-            newAngle = angle.getInteger("right");
-
-        }
-
-        wheel.write(newAngle);
-    }
-
-    public int getChannel() { return channel;}
-
-    public void setChannel(int chn) { this.channel = chn;}
-
-    public int getTurningMax(){return this.turningMax;}
-
-    public void setTurningMax(int angle){
-        this.turningMax = angle;
-        this.minAngle = straightAngle - angle;
-        this.maxAngle = straightAngle + angle;
-
-        Document angleDoc = new Document();
-        angleDoc.put("left", this.minAngle);
-        angleDoc.put("straight", this.straightAngle);
-        angleDoc.put("right", this.maxAngle);
-
-        this.angle = angleDoc;
-    }
-
-    public int getTurningOffset() { return turningOffset;}
-
-    public void setTurningOffset(int value) {
-        setTurningOffset(value);
-        //self.db.set('turning_offset', value)
-        wheel.setOffset(value);
-        turnStraight();
-    }
-
-    public void ready() {
-        // Get the wheel to a ready position
-        wheel.setOffset(getTurningOffset());
-        turnStraight();
-    }
-
-    public void calibration() {
-        //Get the front wheels to the calibration position.
-        turnStraight();
-        cali_turning_offset = getTurningOffset();
-    }
-
-    public void caliLeft() {
-        //Calibrate the wheels to left
-        cali_turning_offset -= 1;
-        wheel.setOffset(cali_turning_offset);
-        turnStraight();
-    }
-
-    public void caliRight() {
-        //Calibrate the wheels to right
-        cali_turning_offset += 1;
-        wheel.setOffset(cali_turning_offset);
-        turnStraight();
-    }
-
-    public void caliOk() {
-        //Save the calibration value
-        //TBD if this is needed
-        //self.db.set('turning_offset', self.turning_offset)
-    }
-
-    @Override
-    public void close() throws IOException {
-        wheel.close();
+    if (channel != null) {
+      this.channel = channel;
+    } else {
+      this.channel = FRONT_WHEEL_CHANNEL;
     }
 
 
-    public static void test(int chn) throws IOException, InterruptedException {
-        FrontWheels front_wheels = new FrontWheels(null, chn);
+    this.straightAngle = 90;
+    setTurningMax(45);
 
-        for( int i = 0; i < 3; i++){
-            front_wheels.turnLeft();
-            Thread.sleep(1000);
+    this.turningOffset = 0;
 
-            front_wheels.turnStraight();
-            Thread.sleep(1000);
+    wheel = new Servo(channel);
+  }
 
-            front_wheels.turnRight();
-            Thread.sleep(1000);
+  public void turnLeft() {
+    wheel.write(angle.getInteger("left"));
+  }
 
-            front_wheels.turnStraight();
-            Thread.sleep(1000);
-        }
+  public void turnStraight() {
+    wheel.write(angle.getInteger("straight"));
+  }
 
-        front_wheels.close();
+  public void turnRight() {
+    wheel.write(angle.getInteger("right"));
+  }
+
+  public void turn(int newAngle) {
+    if (newAngle < angle.getInteger("left")) {
+      newAngle = angle.getInteger("left");
     }
+
+    if (newAngle > angle.getInteger("right")) {
+      newAngle = angle.getInteger("right");
+
+    }
+
+    wheel.write(newAngle);
+  }
+
+  public int getChannel() {
+    return channel;
+  }
+
+  public void setChannel(int chn) {
+    this.channel = chn;
+  }
+
+  public int getTurningMax() {
+    return this.turningMax;
+  }
+
+  public void setTurningMax(int angle) {
+    this.turningMax = angle;
+    this.minAngle = straightAngle - angle;
+    this.maxAngle = straightAngle + angle;
+
+    Document angleDoc = new Document();
+    angleDoc.put("left", this.minAngle);
+    angleDoc.put("straight", this.straightAngle);
+    angleDoc.put("right", this.maxAngle);
+
+    this.angle = angleDoc;
+  }
+
+  public int getTurningOffset() {
+    return turningOffset;
+  }
+
+  public void setTurningOffset(int value) {
+    setTurningOffset(value);
+    //self.db.set('turning_offset', value)
+    wheel.setOffset(value);
+    turnStraight();
+  }
+
+  public void ready() {
+    // Get the wheel to a ready position
+    wheel.setOffset(getTurningOffset());
+    turnStraight();
+  }
+
+  public void calibration() {
+    //Get the front wheels to the calibration position.
+    turnStraight();
+    cali_turning_offset = getTurningOffset();
+  }
+
+  public void caliLeft() {
+    //Calibrate the wheels to left
+    cali_turning_offset -= 1;
+    wheel.setOffset(cali_turning_offset);
+    turnStraight();
+  }
+
+  public void caliRight() {
+    //Calibrate the wheels to right
+    cali_turning_offset += 1;
+    wheel.setOffset(cali_turning_offset);
+    turnStraight();
+  }
+
+  public void caliOk() {
+    //Save the calibration value
+    //TBD if this is needed
+    //self.db.set('turning_offset', self.turning_offset)
+  }
+
+  @Override
+  public void close() throws IOException {
+    wheel.close();
+  }
+
+
+  public static void test(int chn) throws IOException, InterruptedException {
+    FrontWheels front_wheels = new FrontWheels(null, chn);
+
+    for (int i = 0; i < 3; i++) {
+      front_wheels.turnLeft();
+      Thread.sleep(1000);
+
+      front_wheels.turnStraight();
+      Thread.sleep(1000);
+
+      front_wheels.turnRight();
+      Thread.sleep(1000);
+
+      front_wheels.turnStraight();
+      Thread.sleep(1000);
+    }
+
+    front_wheels.close();
+  }
 }

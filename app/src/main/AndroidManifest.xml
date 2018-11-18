@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mongodb.stitch_car_test">
+    package="com.mongodb.stitch.rover">
     <uses-permission android:name="com.google.android.things.permission.USE_PERIPHERAL_IO"/>
     <uses-permission android:name="com.google.android.things.permission.MANAGE_INPUT_DRIVERS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
 
     <application>
         <uses-library android:name="com.google.android.things" />

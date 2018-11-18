@@ -99,5 +99,6 @@ class Move {
         + "id=" + id
         + ", angle=" + angle
         + ", speed=" + speed
-        + "}";  }
+        + "}";
+  }
 }

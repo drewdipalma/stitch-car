@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.mongodb.stitch_car_test"
+        applicationId "com.mongodb.stitch.rover.driver"
         minSdkVersion 27
         targetSdkVersion 28
         versionCode 1
@@ -24,7 +24,7 @@ android {
 
 dependencies {
     compileOnly 'com.google.android.things:androidthings:1.0'
-    implementation 'org.mongodb:stitch-android-sdk:4.1.0'
+    implementation 'org.mongodb:stitch-android-sdk:4.1.1'
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'

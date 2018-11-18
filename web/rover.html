@@ -31,7 +31,7 @@
 
   function loadRovers() {
     const client = stitch.Stitch.defaultAppClient;
-    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('Rover').collection('Moves');
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
     coll.find({}).asArray().then(rovers => {
       let roverItems = [];
       for (let rover of rovers) {
@@ -45,7 +45,7 @@
 
   function selectRover(roverId) {
     const client = stitch.Stitch.defaultAppClient;
-    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('Rover').collection('Moves');
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
 
     coll.watch([roverId])
       .then(stream => {
@@ -64,7 +64,7 @@
 
   function pushMoveToRover(roverId) {
     const client = stitch.Stitch.defaultAppClient;
-    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('Rover').collection('Moves');
+    const coll = client.getServiceClient(stitch.RemoteMongoClient.factory, 'mongodb-atlas').db('rover').collection('rovers');
 
     const angle = parseInt($("#angle").val());
     const speed = parseInt($("#speed").val());

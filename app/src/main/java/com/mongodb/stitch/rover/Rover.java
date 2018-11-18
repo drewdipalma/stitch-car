@@ -16,10 +16,13 @@
 
 package com.mongodb.stitch.rover;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
-import org.bson.BsonString;
 import org.bson.BsonReader;
+import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.BsonWriter;
 import org.bson.codecs.BsonDocumentCodec;
@@ -27,20 +30,15 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 class Rover {
 
-  public static final String ROVERS_DATABASE = "Rover";
-  public static final String ROVERS_COLLECTION = "Moves";
-  public static final String SENSORS_COLLECTION = "Sensors";
+  public static final String ROVERS_DATABASE = "rover";
+  public static final String ROVERS_COLLECTION = "rovers";
+  public static final String SENSORS_COLLECTION = "sensors";
 
   private final String id;
   private final String lastMoveCompleted;
   private final List<Move> moves;
-
 
 
   Rover(
@@ -57,7 +55,7 @@ class Rover {
     this(userId, null, Collections.emptyList());
   }
 
-  public Rover(final Rover rover, List<Move> moves) {
+  public Rover(final Rover rover, final List<Move> moves) {
     this(rover.getId(), rover.getLastMoveCompleted(), moves);
   }
 

@@ -14,5 +14,8 @@
  * limitations under the License.
  */
 
-/** This package contains the example Rover software. */
+/**
+ * This package contains the example Rover software.
+ */
+
 package com.mongodb.stitch.rover;

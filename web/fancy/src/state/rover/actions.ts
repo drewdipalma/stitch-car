@@ -62,6 +62,7 @@ export const addRoverMove = createAsync<AddRoverMoveRequest, RemoteUpdateResult>
           _id: new BSON.ObjectId().toHexString(),
           angle,
           speed: (isForward ? 1 : -1) * value
-        } } }
+        } },
+        '$unset': {'__stitch_sync_version': 1} }
       )
 );

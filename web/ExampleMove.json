@@ -1,0 +1,17 @@
+{
+  "_id":"5bddda7f0c4db16e40464ebf",
+  "moves":[{
+    "_id":"5bef39bdec4771d7e37daf90",
+    "angle":{"$numberInt":"90"},
+    "speed":{"$numberInt":"3"}
+  },{
+    "_id":"5bef39c1ec4771d7e37daf91",
+    "angle":{"$numberInt":"75"},
+    "speed":{"$numberInt":"2"}
+  }],
+  "__stitch_sync_version":{
+    "spv":{"$numberInt":"1"},
+    "id":"db8bb60c-6b46-478d-aa1b-328ed7ca0900",
+    "v":{"$numberLong":"0"}
+  }
+}

@@ -129,10 +129,12 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
           Thread.sleep(1000);
 
           try {
-            if (backWheels.getSpeed() == 0) {
+            if(backWheels.getSpeed() != 0){
               backWheels.stop();
             }
-          } catch (final IOException | InterruptedException e) {
+          } catch (IOException e) {
+            e.printStackTrace();
+          } catch (InterruptedException e) {
             e.printStackTrace();
           }
 
@@ -144,7 +146,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         final Move move = rover.getMoves().get(0);
         doMove(move);
         final Document update = new Document("$pull", new Document("moves",
-            new Document("_id", move.getId())));
+                new Document("_id", move.getId())));
         rovers.sync().updateOne(getRoverFilter(), update).addOnCompleteListener(task -> {
           if (!task.isSuccessful()) {
             Log.d(TAG, "failed to update rover document", task.getException());
@@ -158,26 +160,28 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private void doMove(final Move move) {
     Log.i(TAG, "Doing move " + move);
     Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
-    final int speed = move.getSpeed();
-    final int delay = 10;
-    final int moveLength = 3000;
+    int speed = move.getSpeed();
+    int DELAY = 10;
+    int MOVE_LENGTH = 3000;
 
     try {
       frontWheels.turn(move.getAngle());
 
-      if (speed > 1) {
+      if(speed > 0){
         backWheels.forward();
       } else {
         backWheels.backward();
       }
 
-      for (int i = backWheels.getSpeed(); i < 8 * Math.abs(speed); i++) {
+      for(int i = backWheels.getSpeed(); i < 12*Math.abs(speed); i++){
         backWheels.setSpeed(i);
-        Thread.sleep(delay);
+        Thread.sleep(DELAY);
       }
 
-      Thread.sleep(moveLength);
-    } catch (final InterruptedException | IOException e) {
+      Thread.sleep(MOVE_LENGTH);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }

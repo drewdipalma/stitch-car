@@ -77,13 +77,15 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         try {
             this.frontWheels = new FrontWheels("I2C1", 0);
             this.backWheels = new BackWheels();
+
+            readSensor();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
+        /*try {
             this.TempSensor = new BMP085(null, null);
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,7 +104,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         doLogin();
     }
@@ -184,7 +186,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         try {
             frontWheels.turn(move.getAngle());
 
-            if(speed > 1){
+            if(speed > 0){
                 backWheels.forward();
             } else {
                 backWheels.backward();
@@ -231,5 +233,28 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             }
         }
         return new Rover(localRover, nextMoves);
+    }
+
+    private void readSensor() throws IOException {
+        try (BMP280 tempSenor = new BMP280("I2C1")){
+            tempSenor.setTemperatureOversampling(BMP280.OVERSAMPLING_1X);
+            tempSenor.setPressureOversampling(BMP280.OVERSAMPLING_1X);
+
+            tempSenor.setMode(BMP280.MODE_NORMAL);
+
+            for(int i = 0 ; i < 20 ; i++) {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                }
+                Log.d(TAG, "Temperature: " + tempSenor.readTemperature());
+                Log.d(TAG, "Pressure: " + tempSenor.readPressure());
+            }
+
+
+        } catch (IOException e) {
+            Log.e(TAG, "Error during IO", e);
+            // error reading temperature
+        }
     }
 }

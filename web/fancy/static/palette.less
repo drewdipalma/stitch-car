@@ -1,0 +1,205 @@
+@pw: #fff;
+
+@green1: #168B46;
+@green2: #13AA52; // Primary green
+@green3: #1CC061;
+@green4: #89E5B3;
+@green5: #CCFFE1;
+@green6: #f0f7ec;
+@green7: #629c3b;
+@green8: #EFFEF6;
+
+@red1: #ef4c4c;
+@red2: #9d2121;
+@red3: #9d2121;
+@red4: #4d7a2d;
+@red5: #3b6a1b;
+@red6: #fae6e5;
+@red7: #dd5853;
+@error-red: #f2dede;
+
+@gray0: #313030;
+@gray1: #494747;
+@gray2: #615f5f;
+@gray3: #807f7f;
+@gray4: #a09f9e;
+@gray5: #bfbfbe;
+@gray6: #dee0e3;
+@gray7: #ebebed;
+@gray8: #f5f6f7;
+@gray9: #e8e9e9;
+@gray10: #dddddd;
+@gray11: #d8d8d8;
+@gray12: #ababab;
+@gray13: #f8f8f8;
+
+@blue2: #46b1e2;
+@blue3: #5caeeb;
+@blue6: #e1f4ff;
+
+@mongodbslate: #4d5359;
+
+@yellow0: #fffbf5;
+@yellow1: #a16a03;
+@yellow2: #fee9c3;
+@yellow3: #fdf4e4;
+@yellow4: #f0b34a;
+
+@blue3: #5b81a9; // TODO: deprecate
+@blue4: #84a1bf; // TODO: deprecate
+@blue5: #adc0d4; // TODO: deprecate
+
+@purple0: #373e50; // TODO: deprecate
+@purple1: #535d77; // TODO: deprecate
+@purple2: #6e7c9f; // TODO: deprecate
+@purple3: #8b96b2; // TODO: deprecate
+@purple4: #a8b0c5; // TODO: deprecate
+@purple5: #c5cbd9; // TODO: deprecate
+
+/* Alert Colors */
+@alertOrange: #fdb100;
+@alertOrangeBg: #fffbf5;
+@alertOrangeBorder: #fee9c3;
+@alertRed: #ef4c4c;
+@alertRedBg: #fff6f6;
+@alertRedBorder: #fbcccc;
+@alertRedDark: darken(@alertRed, 25%);
+@alertBlue: #43b1e5;
+@alertBlueBg: #d9edf7;
+@alertBlueBorder: #b4dff3;
+@alertGreen: lighten(@green2, 15%);
+@alertGreenBg: @green8;
+@alertGreenBorder: lighten(@green1, 45%);
+@alertBlueInputDisabled: #c9dbe4;
+@alertBlueTextDisabled: #5a869c;
+@alertGrey: #818487;
+
+/* Other Colors */
+@blue: #43b1e5;
+@selectBlue: #5897fb;
+@red: #ed271c;
+@lightRed: #ffeaea;
+@yellow: @alertOrange;
+@pw: #fff;
+@cautionOrange: @alertOrange;
+@errorBackground: #fdd0d1;
+@validGreen: #f1f2ed;
+@navyBlue: #1d6c92;
+
+/* Syntax Highlighting */
+@stringSyntaxHighlight: steelblue;
+@booleanSyntaxHighlight: purple;
+@objectIdSyntaxHighlight: orangered;
+@integerSyntaxHighlight: #145a32;
+@longSyntaxHighlight: #196f3d;
+@doubleSyntaxHighlight: #1e8449;
+@dateSyntaxHighlight: firebrick;
+
+/* Text Colors */
+/* default text color is @gray1 */
+@linkText: #006cbc;
+@linkOnDark: #2898dd;
+@warningText: #ffb618;
+@successText: @green2;
+@errorText: @alertRed; // deprecated - use @alertRed!
+@mutedText: @gray4;
+@veryMutedText: @gray5;
+@subNavText: #6f6763;
+
+/*Chart Colors*/
+@chart0: #f68a1e;
+@chart1: @blue;
+@chart2: #f38183;
+@chart3: #26a348;
+@chart4: #fbb129;
+@chart5: #92a83b;
+@chart6: #46929a;
+@chart7: #d381b3;
+@chart8: #85ca98;
+
+@chartAverage: #d29e29;
+@chartTotal: #6ba442;
+
+@chartRestart: #ef4c65;
+@chartBecamePrimary: #fbb129;
+@chartBecameSecondary: #7f6a4e;
+
+@chart7Background: #f4e1ed;
+
+/* Semantic Colors */
+
+@inactiveIcon: @gray4;
+
+/* Button Colors */
+@buttonColor: @gray1;
+@buttonBorder: @gray6;
+@buttonBackground: @pw;
+
+// Default Button State Styles
+@buttonFocusColor: @gray0;
+@buttonFocusBorder: @gray5;
+@buttonFocusBackground: @pw;
+@buttonShadowOuter: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+@buttonShadowInner: inset 0 -1px 0 0 @gray6;
+@buttonFocusShadowInner: inset 0 -1px 0 0 @gray5;
+@buttonGradient: linear-gradient(-180deg, @pw 0%, lighten(@gray5, 20%));
+@buttonHoverGradient: linear-gradient(-180deg, lighten(@gray5, 50%) 0%, lighten(@gray5, 15%));
+@buttonFocusGradient: linear-gradient(-180deg, lighten(@gray5, 15%) 0%, lighten(@gray5, 50%) 100%);
+
+// Default Button on Dark State Styles
+@darkButtonBorder: @gray0;
+
+@darkButtonColor: @pw;
+
+@darkButtonGradient: linear-gradient(-180deg, @gray3 0%, @gray1 100%);
+@darkButtonFocusGradient: linear-gradient(-180deg, darken(@gray3, 2%) 0%, darken(@gray1, 2%) 100%);
+@darkButtonActiveGradient: linear-gradient(-180deg, @gray1 0%, @gray3 100%);
+
+@darkButtonShadowInner: inset 0 -1px 0 0 @gray0;
+
+// Disabled Button State Styles
+@buttonDisabled: @gray3;
+
+// Primary Button State Styles
+@primaryButtonBorder: darken(@green1, 2%);
+@primaryButtonFocusBorder: darken(@green1, 7%);
+@primaryButtonBorderDisabled: lighten(@green1, 25%);
+
+@primaryButtonBackground: @green2;
+@primaryButtonFocusBackground: darken(@green2, 5%);
+
+@primaryButtonGradient: linear-gradient(-180deg, @green2 0%, lighten(@green1, 2.5%) 100%);
+@primaryButtonHoverGradient: linear-gradient(-180deg, darken(@green2, 2.5%) 0%, darken(@green1, 2.5%) 100%);
+@primaryButtonFocusGradient: linear-gradient(-180deg, darken(@green1, 2.5%) 0%, darken(@green2, 2.5%) 100%);
+
+@primaryButtonShadowInner: inset 0 -1px 0 0 rgba(0, 0, 0, 0.15);
+@primaryButtonFocusShadowInner: inset 0 -1px 0 0 rgba(0, 0, 0, 0.3);
+@primaryButtonActiveShadowInner: inset 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+
+@primaryButtonDisabled: lighten(@green2, 20%);
+
+@infoButtonColor: @green2;
+@infoButtonBackground: transparent;
+@infoButtonFocus: darken(@green2, 5%);
+@infoButtonDisabled: lighten(@green2, 20%);
+
+@alertButtonBlue: #31708f;
+@alertButtonColor: @alertButtonBlue;
+@alertButtonDisabled: lighten(@alertButtonBlue, 30%);
+
+// Danger Button State Styles
+@dangerButtonBorder: #97130c;
+@dangerButtonBackground: #bd180f;
+
+@dangerButtonFocusBorder: darken(@dangerButtonBackground, 10%);
+@dangerButtonBorderDisabled: lighten(@dangerButtonBorder, 45%);
+
+@dangerButtonFocusBackground: darken(@dangerButtonBackground, 5%);
+
+@dangerButtonGradient: linear-gradient(-180deg, darken(@alertRed, 10%) 0%, darken(@alertRed, 20%) 100%);
+@dangerButtonHoverGradient: linear-gradient(-180deg, darken(@alertRed, 15%) 0%, darken(@alertRed, 25%) 100%);
+@dangerButtonActiveGradient: linear-gradient(-180deg, darken(@alertRed, 20%) 0%, darken(@alertRed, 10%) 100%);
+
+@dangerButtonDisabled: lighten(@dangerButtonBackground, 40%);
+
+@dangerButtonShadowInner: inset 0 -1px 0 0 darken(@alertRed, 25%);

@@ -1,0 +1,65 @@
+.controls {
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+
+  &-direction {
+    .control-panel();
+
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+
+    &-gauge {
+      flex: 0 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      &-meter {
+        flex: 1;
+      }
+
+      &-toggle {
+        margin-top: 20px;
+        align-self: center;
+        display: flex;
+      }
+    }
+
+    &-add {
+      width: 40%;
+      margin-top: 40px;
+      padding: 20px 0 30px 0;
+      align-self: center;
+    }
+  }
+
+  &-speed {
+    .control-panel();
+
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.button-is-pressed {
+  border-color: @buttonFocusBorder;
+  background-image: @buttonFocusGradient;
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.1);
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) inset, 0 0 0 rgba(0, 0, 0, 0);
+  outline: none;
+}
+
+.control-panel() {
+
+  h2 {
+    padding-top: 40px;
+  }
+}
+
+input[type='range'] {
+}

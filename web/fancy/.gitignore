@@ -1,0 +1,17 @@
+#editor temp files
+*~
+*.swp
+
+package-lock.json
+node_modules
+npm-debug.log
+dist/static
+yarn-error.log
+e2e/debugScreenshots
+e2e/errorScreenshots
+e2e/bin/selenium-server-standalone.jar
+coverage/
+
+.DS_Store
+dist/.DS_Store
+

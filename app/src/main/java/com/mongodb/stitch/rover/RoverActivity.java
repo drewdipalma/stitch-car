@@ -162,7 +162,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
     int speed = move.getSpeed();
     int DELAY = 10;
-    int MOVE_LENGTH = 3000;
+    int MOVE_LENGTH = 500;
 
     try {
       frontWheels.turn(move.getAngle());
@@ -173,10 +173,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         backWheels.backward();
       }
 
-      for(int i = backWheels.getSpeed(); i < 12*Math.abs(speed); i++){
-        backWheels.setSpeed(i);
-        Thread.sleep(DELAY);
-      }
+      backWheels.setSpeed(23*Math.abs(speed));
 
       Thread.sleep(MOVE_LENGTH);
     } catch (InterruptedException e) {

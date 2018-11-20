@@ -10,7 +10,7 @@ interface Props {
 
 class DirectionGauge extends Component<Props> {
   toggleButtonClassNames = (speedIsForward: boolean) =>
-    classNames('button', { 'button-is-pressed': speedIsForward == this.props.speedIsForward });
+    classNames('button', 'button-is-small', { 'button-is-pressed': speedIsForward == this.props.speedIsForward });
 
   toggleButton = (speedIsForward: boolean) => {
     this.props.setSpeedForward(speedIsForward);

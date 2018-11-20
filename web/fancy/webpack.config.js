@@ -12,9 +12,10 @@ module.exports = (env = {}) => ({
     './src/index.tsx'
   ],
   output: {
+    path: `${__dirname}/dist/static`,
+    publicPath: '/static/',
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/static/'
+    chunkFilename: '[name].[chunkhash].js',
   },
   devtool: 'inline-source-map',
   resolve: {

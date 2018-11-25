@@ -14,6 +14,25 @@
  * limitations under the License.
  */
 
+
+/**
+ * Shell script to simulate network failure:
+ * adb shell
+ * su
+ * while true
+ * do
+ *   ifconfig wlan0 down
+ *   ifconfig eth0 down
+ *   sleep 10
+ *   ifconfig
+ *   ifconfig wlan0 up
+ *   ifconfig eth0 up
+ *   sleep 30
+ * done
+ * # This will disconnect you from adb but will keep running.
+ * # Easiest way to reset this is to turn the device off and back on.
+ */
+
 package com.mongodb.stitch.rover;
 
 import android.app.Activity;
@@ -26,7 +45,9 @@ import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient;
 import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoCollection;
 import com.mongodb.stitch.core.auth.providers.serverapikey.ServerApiKeyCredential;
 import com.mongodb.stitch.core.internal.common.BsonUtils;
+import com.mongodb.stitch.core.services.mongodb.remote.sync.ChangeEventListener;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.ConflictHandler;
+import com.mongodb.stitch.core.services.mongodb.remote.sync.DefaultSyncConflictResolvers;
 import com.mongodb.stitch.core.services.mongodb.remote.sync.internal.ChangeEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +60,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private static final String TAG = "RoverActivity";
 
   private RemoteMongoCollection<Rover> rovers;
+  private RemoteMongoCollection<Document> sensorReadings;
+  private BMP085 sensor;
+  private Document sensorDoc;
+
   private String userId;
 
   public FrontWheels frontWheels;
@@ -51,6 +76,7 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     final StitchAppClient client = Stitch.getDefaultAppClient();
     final RemoteMongoClient mongoClient =
         client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas");
+
     rovers = mongoClient.getDatabase(Rover.ROVERS_DATABASE)
         .getCollection(Rover.ROVERS_COLLECTION, Rover.class)
         .withCodecRegistry(CodecRegistries.fromRegistries(
@@ -62,33 +88,24 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         null,
         (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
+    sensorReadings = mongoClient.getDatabase(Rover.ROVERS_DATABASE)
+            .getCollection(Rover.SENSORS_COLLECTION);
+
+    sensorReadings.sync().configure(
+            DefaultSyncConflictResolvers.remoteWins(),
+            new onSensorEvent(),
+            (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
+
     try {
       this.frontWheels = new FrontWheels("I2C1", 0);
       this.backWheels = new BackWheels();
+      sensor = new BMP085(null, null);
     } catch (InterruptedException | IOException e) {
       e.printStackTrace();
     }
 
     doLogin();
   }
-
-  /**
-   * Shell script to simulate network failure:
-   * adb shell
-   * su
-   * while true
-   * do
-   *   ifconfig wlan0 down
-   *   ifconfig eth0 down
-   *   sleep 10
-   *   ifconfig
-   *   ifconfig wlan0 up
-   *   ifconfig eth0 up
-   *   sleep 30
-   * done
-   * # This will disconnect you from adb but will keep running.
-   * # Easiest way to reset this is to turn the device off and back on.
-   */
 
   private void doLogin() {
     Stitch.getDefaultAppClient().getAuth().loginWithCredential(
@@ -101,6 +118,8 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
           if (rovers.sync().getSyncedIds().isEmpty()) {
             rovers.sync().insertOne(new Rover(userId));
           }
+
+          sensorDoc = new Document("roverId", userId);
 
           moveLoop();
         })
@@ -127,6 +146,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
       if (rover == null) {
         try {
           Thread.sleep(1000);
+
+          sensorDoc.put("reading", sensor.getTemp());
+          sensorDoc.put("timestamp", System.currentTimeMillis());
+          sensorReadings.sync().insertOne(sensorDoc);
 
           try {
             if(backWheels.getSpeed() != 0){
@@ -165,6 +188,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     int MOVE_LENGTH = 500;
 
     try {
+      sensorDoc.put("reading", sensor.getTemp());
+      sensorDoc.put("timestamp", System.currentTimeMillis());
+      sensorReadings.sync().insertOne(sensorDoc);
+
       frontWheels.turn(move.getAngle());
 
       if(speed > 0){
@@ -212,4 +239,15 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     }
     return new Rover(localRover, nextMoves);
   }
+
+  private class onSensorEvent implements ChangeEventListener<Document> {
+    @Override
+    public void onEvent(final BsonValue documentId, final ChangeEvent<Document> event) {
+      if(!event.hasUncommittedWrites() && sensorReadings.sync().getSyncedIds().contains(documentId)){
+        sensorReadings.sync().desyncOne(documentId);
+      }
+    }
+  }
 }
+
+

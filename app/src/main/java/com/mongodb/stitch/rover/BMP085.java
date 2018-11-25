@@ -56,13 +56,13 @@ public class BMP085 {
     public I2cDevice device;
 
     public BMP085(Integer mode, Integer address) throws IOException {
-        //Check to see if the mode is valid
-        if(mode < 0 || mode > 3){
-            throw new IllegalArgumentException(String.format("Unexpected mode value \"%d\".", mode));
-        }
-
         if(mode != null){
             this.mode = mode;
+        }
+
+        //Check to see if the mode is valid
+        if(this.mode < 0 || this.mode > 3){
+            throw new IllegalArgumentException(String.format("Unexpected mode value \"%d\".", mode));
         }
 
         if(address != null){
@@ -70,11 +70,11 @@ public class BMP085 {
         }
 
         //Create the I2C Device
-        final PeripheralManager manager = PeripheralManager.getInstance();
-        this.device = manager.openI2cDevice("I2C1", this.address);
+        //final PeripheralManager manager = PeripheralManager.getInstance();
+        //this.device = manager.openI2cDevice("I2C1", this.address);
 
         //Load calibration values.
-        loadCalibration();
+        //loadCalibration();
     }
 
     public int readBE(int reg) throws IOException {
@@ -131,5 +131,9 @@ public class BMP085 {
         int raw = readBE(BMP085_TEMPDATA);
         Log.d(TAG, String.format("Raw Temp = \"%d\".", raw));
         return raw;
+    }
+
+    public double getTemp() {
+        return (65 + Math.random() * 4);
     }
 }

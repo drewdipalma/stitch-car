@@ -63,6 +63,6 @@ export const addRoverMove = createAsync<AddRoverMoveRequest, RemoteUpdateResult>
           angle,
           speed: (isForward ? 1 : -1) * value
         } },
-        '$unset': {'__stitch_sync_version': 1} }
+        '$inc': {'__stitch_sync_version.v': 1} }
       )
 );

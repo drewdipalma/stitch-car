@@ -72,7 +72,7 @@
       return;
     }
     const move = {"_id": new BSON.ObjectID().toHexString(), angle, speed};
-    coll.updateOne({"_id": roverId}, {"$push": { "moves": move }, "$unset": {"__stitch_sync_version": 1}});
+    coll.updateOne({"_id": roverId}, {"$push": { "moves": move }, "$inc": {"__stitch_sync_version.v": 1}});
   }
 
   function displayRover(rover) {

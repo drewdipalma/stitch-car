@@ -122,6 +122,20 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             rovers.sync().insertOne(new Rover(userId));
           }
 
+          new Thread(() -> {
+            while (true) {
+              final Document sensorDoc = new Document("roverId", userId);
+              sensorDoc.put("reading", sensor.getTemp());
+              sensorDoc.put("timestamp", System.currentTimeMillis());
+              sensorReadings.sync().insertOne(sensorDoc);
+
+              try {
+                Thread.sleep(3000);
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+            }
+          }).start();
           moveLoop();
         })
         .addOnFailureListener(e -> {
@@ -145,11 +159,6 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private void moveLoop() {
     rovers.sync().find(getLatestMoveFilter()).first().addOnSuccessListener(rover -> {
       if (rover == null) {
-        final Document sensorDoc = new Document("roverId", userId);
-        sensorDoc.put("reading", sensor.getTemp());
-        sensorDoc.put("timestamp", System.currentTimeMillis());
-        sensorReadings.sync().insertOne(sensorDoc);
-
         try {
           if (backWheels.getSpeed() != 0) {
             backWheels.stop();
@@ -193,11 +202,6 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     final int moveLength = 500;
 
     try {
-      final Document sensorDoc = new Document("roverId", userId);
-      sensorDoc.put("reading", sensor.getTemp());
-      sensorDoc.put("timestamp", System.currentTimeMillis());
-      sensorReadings.sync().insertOne(sensorDoc);
-
       frontWheels.turn(move.getAngle());
 
       if (speed > 0) {

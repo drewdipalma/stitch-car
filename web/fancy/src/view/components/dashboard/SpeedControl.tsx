@@ -19,7 +19,8 @@ class SpeedControl extends Component<Props> {
             step="1"
             value={speedValue}
             onChange={e => setSpeedValue(parseInt(e.target.value))}
-          />
+            className="controls-speed-slider"
+          /> 
         </div>
       </div>
     );

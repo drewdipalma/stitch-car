@@ -27,6 +27,7 @@ class DirectionGauge extends Component<Props> {
             max="135"
             value={angle}
             onChange={e => setAngle(parseInt(e.target.value))}
+            className="controls-direction-gauge-meter-slider"
           />
         </div>
         <div className="controls-direction-gauge-toggle">

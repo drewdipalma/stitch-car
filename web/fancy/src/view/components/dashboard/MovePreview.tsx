@@ -16,7 +16,7 @@ class MovePreview extends Component<Props> {
     return (
       <div className="move-preview">
         <MoveCard {...data} />
-        <p style={{textAlign: 'center' }}>{JSON.stringify(data)}</p>
+        <p style={{textAlign: 'center', fontFamily: 'consolas, monospace' }}>{JSON.stringify(data)}</p>
       </div>
     );
   }

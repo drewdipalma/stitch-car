@@ -58,6 +58,7 @@ import org.bson.codecs.configuration.CodecRegistries;
 
 public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private static final String TAG = "RoverActivity";
+  private static final int MOVE_LOOP_WAIT_TIME_MS = 250;
 
   private RemoteMongoCollection<Rover> rovers;
   private RemoteMongoCollection<Document> sensorReadings;
@@ -144,23 +145,22 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private void moveLoop() {
     rovers.sync().find(getLatestMoveFilter()).first().addOnSuccessListener(rover -> {
       if (rover == null) {
+        sensorDoc.put("reading", sensor.getTemp());
+        sensorDoc.put("timestamp", System.currentTimeMillis());
+        sensorReadings.sync().insertOne(sensorDoc);
+
         try {
-          Thread.sleep(1000);
-
-          sensorDoc.put("reading", sensor.getTemp());
-          sensorDoc.put("timestamp", System.currentTimeMillis());
-          sensorReadings.sync().insertOne(sensorDoc);
-
-          try {
-            if(backWheels.getSpeed() != 0){
-              backWheels.stop();
-            }
-          } catch (IOException e) {
-            e.printStackTrace();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
+          if(backWheels.getSpeed() != 0){
+            backWheels.stop();
           }
+        } catch (IOException e) {
+          e.printStackTrace();
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
 
+        try {
+          Thread.sleep(MOVE_LOOP_WAIT_TIME_MS);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -173,6 +173,11 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         rovers.sync().updateOne(getRoverFilter(), update).addOnCompleteListener(task -> {
           if (!task.isSuccessful()) {
             Log.d(TAG, "failed to update rover document", task.getException());
+          }
+          try {
+            Thread.sleep(MOVE_LOOP_WAIT_TIME_MS);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
           }
           moveLoop();
         });

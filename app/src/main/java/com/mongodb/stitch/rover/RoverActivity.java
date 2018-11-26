@@ -56,6 +56,9 @@ import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 
+/**
+ * RoverActivity is the main and only activity for the rover.
+ */
 public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private static final String TAG = "RoverActivity";
   private static final int MOVE_LOOP_WAIT_TIME_MS = 250;
@@ -63,7 +66,6 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private RemoteMongoCollection<Rover> rovers;
   private RemoteMongoCollection<Document> sensorReadings;
   private BMP085 sensor;
-  private Document sensorDoc;
 
   private String userId;
 
@@ -93,9 +95,9 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             .getCollection(Rover.SENSORS_COLLECTION);
 
     sensorReadings.sync().configure(
-            DefaultSyncConflictResolvers.remoteWins(),
-            new onSensorEvent(),
-            (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
+        DefaultSyncConflictResolvers.remoteWins(),
+        new SensorEventListener(),
+        (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
     try {
       this.frontWheels = new FrontWheels("I2C1", 0);
@@ -120,8 +122,6 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             rovers.sync().insertOne(new Rover(userId));
           }
 
-          sensorDoc = new Document("roverId", userId);
-
           moveLoop();
         })
         .addOnFailureListener(e -> {
@@ -145,12 +145,13 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private void moveLoop() {
     rovers.sync().find(getLatestMoveFilter()).first().addOnSuccessListener(rover -> {
       if (rover == null) {
+        final Document sensorDoc = new Document("roverId", userId);
         sensorDoc.put("reading", sensor.getTemp());
         sensorDoc.put("timestamp", System.currentTimeMillis());
         sensorReadings.sync().insertOne(sensorDoc);
 
         try {
-          if(backWheels.getSpeed() != 0){
+          if (backWheels.getSpeed() != 0) {
             backWheels.stop();
           }
         } catch (IOException e) {
@@ -188,26 +189,26 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   private void doMove(final Move move) {
     Log.i(TAG, "Doing move " + move);
     Toast.makeText(RoverActivity.this, "Doing move " + move, Toast.LENGTH_SHORT).show();
-    int speed = move.getSpeed();
-    int DELAY = 10;
-    int MOVE_LENGTH = 500;
+    final int speed = move.getSpeed();
+    final int moveLength = 500;
 
     try {
+      final Document sensorDoc = new Document("roverId", userId);
       sensorDoc.put("reading", sensor.getTemp());
       sensorDoc.put("timestamp", System.currentTimeMillis());
       sensorReadings.sync().insertOne(sensorDoc);
 
       frontWheels.turn(move.getAngle());
 
-      if(speed > 0){
+      if (speed > 0) {
         backWheels.forward();
       } else {
         backWheels.backward();
       }
 
-      backWheels.setSpeed(23*Math.abs(speed));
+      backWheels.setSpeed(23 * Math.abs(speed));
 
-      Thread.sleep(MOVE_LENGTH);
+      Thread.sleep(moveLength);
     } catch (InterruptedException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -245,10 +246,11 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     return new Rover(localRover, nextMoves);
   }
 
-  private class onSensorEvent implements ChangeEventListener<Document> {
+  private class SensorEventListener implements ChangeEventListener<Document> {
     @Override
     public void onEvent(final BsonValue documentId, final ChangeEvent<Document> event) {
-      if(!event.hasUncommittedWrites() && sensorReadings.sync().getSyncedIds().contains(documentId)){
+      if (!event.hasUncommittedWrites()
+          &&  sensorReadings.sync().getSyncedIds().contains(documentId)) {
         sensorReadings.sync().desyncOne(documentId);
       }
     }

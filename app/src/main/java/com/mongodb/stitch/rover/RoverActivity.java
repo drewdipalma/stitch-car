@@ -72,9 +72,16 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
   public FrontWheels frontWheels;
   public BackWheels backWheels;
 
+  private boolean once = false;
+
   protected void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_home);
+
+    if (once) {
+      return;
+    }
+    once = true;
 
     final StitchAppClient client = Stitch.getDefaultAppClient();
     final RemoteMongoClient mongoClient =
@@ -91,18 +98,18 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
         null,
         (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
-    sensorReadings = mongoClient.getDatabase(Rover.ROVERS_DATABASE)
-            .getCollection(Rover.SENSORS_COLLECTION);
-
-    sensorReadings.sync().configure(
-        DefaultSyncConflictResolvers.remoteWins(),
-        new SensorEventListener(),
-        (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
+//    sensorReadings = mongoClient.getDatabase(Rover.ROVERS_DATABASE)
+//            .getCollection(Rover.SENSORS_COLLECTION);
+//
+//    sensorReadings.sync().configure(
+//        DefaultSyncConflictResolvers.remoteWins(),
+//        new SensorEventListener(),
+//        (documentId, error) -> Log.e(TAG, error.getLocalizedMessage()));
 
     try {
       this.frontWheels = new FrontWheels("I2C1", 0);
       this.backWheels = new BackWheels();
-      sensor = new BMP085(null, null);
+//      sensor = new BMP085(null, null);
     } catch (InterruptedException | IOException e) {
       e.printStackTrace();
     }
@@ -122,20 +129,20 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
             rovers.sync().insertOne(new Rover(userId));
           }
 
-          new Thread(() -> {
-            while (true) {
-              final Document sensorDoc = new Document("roverId", userId);
-              sensorDoc.put("reading", sensor.getTemp());
-              sensorDoc.put("timestamp", System.currentTimeMillis());
-              sensorReadings.sync().insertOne(sensorDoc);
-
-              try {
-                Thread.sleep(3000);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
-            }
-          }).start();
+//          new Thread(() -> {
+//            while (true) {
+//              final Document sensorDoc = new Document("roverId", userId);
+//              sensorDoc.put("reading", sensor.getTemp());
+//              sensorDoc.put("timestamp", System.currentTimeMillis());
+//              sensorReadings.sync().insertOne(sensorDoc);
+//
+//              try {
+//                Thread.sleep(3000);
+//              } catch (InterruptedException e) {
+//                e.printStackTrace();
+//              }
+//            }
+//          }).start();
           moveLoop();
         })
         .addOnFailureListener(e -> {

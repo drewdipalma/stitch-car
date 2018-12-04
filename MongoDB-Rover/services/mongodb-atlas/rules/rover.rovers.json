@@ -1,0 +1,41 @@
+{
+    "database": "rover",
+    "collection": "rovers",
+    "roles": [
+        {
+            "name": "Rover",
+            "apply_when": {
+                "_id": "%%user.id"
+            },
+            "fields": {
+                "moves": {}
+            },
+            "read": true,
+            "write": true,
+            "insert": true,
+            "delete": true,
+            "additional_fields": {}
+        },
+        {
+            "name": "Mission Control",
+            "apply_when": {
+                "%%user.id": "5bee0ef8f68eb00e9b560ce8"
+            },
+            "fields": {
+                "moves": {
+                    "write": true
+                }
+            },
+            "insert": false,
+            "delete": false,
+            "additional_fields": {}
+        }
+    ],
+    "schema": {
+        "properties": {
+            "_id": {
+                "bsonType": "string"
+            }
+        }
+    }
+}

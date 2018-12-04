@@ -1,0 +1,6 @@
+{
+    "name": "Kinesis",
+    "actions": [
+        "kinesis:*"
+    ]
+}

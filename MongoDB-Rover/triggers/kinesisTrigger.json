@@ -1,0 +1,16 @@
+{
+    "name": "kinesisTrigger",
+    "type": "DATABASE",
+    "config": {
+        "operation_types": [
+            "INSERT"
+        ],
+        "database": "rover",
+        "collection": "sensors",
+        "service_name": "mongodb-atlas",
+        "match": {},
+        "full_document": true
+    },
+    "function_name": "kinesisTrigger",
+    "disabled": false
+}

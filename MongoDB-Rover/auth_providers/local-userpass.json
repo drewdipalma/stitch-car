@@ -1,0 +1,11 @@
+{
+    "name": "local-userpass",
+    "type": "local-userpass",
+    "config": {
+        "confirmEmailSubject": "",
+        "emailConfirmationUrl": "https://confirm.com",
+        "resetPasswordSubject": "",
+        "resetPasswordUrl": "https://reset.com"
+    },
+    "disabled": false
+}

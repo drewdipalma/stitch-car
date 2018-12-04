@@ -1,0 +1,9 @@
+{
+    "name": "mongodb-atlas",
+    "type": "mongodb-atlas",
+    "config": {
+        "clusterName": "Rover-Cluster",
+        "wireProtocolEnabled": false
+    },
+    "version": 1
+}

@@ -1,0 +1,9 @@
+{
+    "name": "aws",
+    "type": "aws",
+    "config": {
+        "accessKeyId": "AKIAJT3KSU4T3XSXMJZA",
+        "region": "us-east-1"
+    },
+    "version": 1
+}

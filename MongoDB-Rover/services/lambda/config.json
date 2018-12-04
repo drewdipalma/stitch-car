@@ -1,0 +1,9 @@
+{
+    "name": "lambda",
+    "type": "aws",
+    "config": {
+        "accessKeyId": "asdfasdfdfasdfasdfdfasfaasdfasdf",
+        "region": "us-east-1"
+    },
+    "version": 1
+}

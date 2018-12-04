@@ -1,0 +1,7 @@
+{
+    "config_version": 20180301,
+    "name": "MongoDB-Rover",
+    "location": "US-OR",
+    "deployment_model": "GLOBAL",
+    "security": {}
+}

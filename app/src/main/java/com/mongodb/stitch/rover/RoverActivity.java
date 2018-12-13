@@ -249,9 +249,10 @@ public class RoverActivity extends Activity implements ConflictHandler<Rover> {
     for (final Move move : remoteRover.getMoves()) {
       if (move.getId().equals(lastMoveCompleted)) {
         caughtUp = true;
-      }
-      if (caughtUp) {
-        nextMoves.add(move);
+      } else {
+        if (caughtUp) {
+          nextMoves.add(move);
+        }
       }
     }
     return new Rover(localRover, nextMoves);
